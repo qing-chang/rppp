@@ -1,0 +1,8 @@
+add_subdirectory(channel)
+add_subdirectory(client)
+add_subdirectory(conf)
+add_subdirectory(frame)
+#add_subdirectory(json)
+add_subdirectory(msg)
+add_subdirectory(server)
+add_subdirectory(socket)
