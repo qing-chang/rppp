@@ -19,6 +19,7 @@ std::task<> ClientModel::control()
         std::cout << "connect fail" << std::endl;
     }else
     {
-        std::cout << "connect succeed成功" << std::endl;
+        std::cout << "connect succeed" << std::endl;
     }
+    
 }

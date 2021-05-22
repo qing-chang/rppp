@@ -42,5 +42,5 @@ int main()
     std::shared_ptr<Socket> listener = std::shared_ptr<Socket>(new Socket{io_context, config.conf->bindPort});
     // Socket listener{io_context, config.conf->bindPort};
     controlListener(listener).resume();
-    io_context.run(); 
+    io_context.run();
 }
