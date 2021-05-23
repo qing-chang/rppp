@@ -25,11 +25,11 @@ int main()
         exit(1);
     }
 
-    iguana::string_stream ss;
-    confClient t = *(config.conf);
-	iguana::json::to_json(ss, t);
-    auto json_str = ss.str();
-	std::cout <<"配置json："<< json_str << std::endl;
+    // iguana::string_stream ss;
+    // confClient t = *(config.conf);
+	// iguana::json::to_json(ss, t);
+    // auto json_str = ss.str();
+	// std::cout <<"配置json："<< json_str << std::endl;
 
     io_context.init();
     Controller ctl;
