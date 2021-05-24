@@ -98,20 +98,13 @@ class Msg
 {
 public:
     Msg()
-    : begin{0},end{0},checked{0},floor{0}
     {}
     ~Msg()
     {}
 
     char buffer[BUFFER_SIZE];
-    int begin;
-    int end;
-    int checked;
-    int floor;
 
     enum msgType type;
-
-    int checkPack();
 
     static std::task<> readMsg(std::shared_ptr<Socket> socket, char *rcvBuff, ssize_t *nbRcved)
     {

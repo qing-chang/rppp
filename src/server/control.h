@@ -15,7 +15,7 @@ public:
     Channel<int> out;
     std::vector<Tunnel> tunnels;
     Control(){}
-    void NewControl();
+    void initControl();
     void registerTunnel();
     void writer();
     void reader();

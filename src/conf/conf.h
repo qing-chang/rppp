@@ -11,21 +11,21 @@ struct confServer{
 };
 REFLECTION(confServer, bindPort, token)
 
-struct confProxy{
+struct confTunnel{
 	std::string type;
     std::string name;
 	std::string localAddr;
 	int localPort;
 	int remotePort;
 };
-REFLECTION(confProxy, type, name, localAddr, localPort, remotePort)
+REFLECTION(confTunnel, type, name, localAddr, localPort, remotePort)
 
 struct confClient{
 	std::string serverAddr;
 	int serverPort;
-	std::list<confProxy> proxy;
+	std::list<confTunnel> tunnel;
 };
-REFLECTION(confClient, serverAddr, serverPort, proxy)
+REFLECTION(confClient, serverAddr, serverPort, tunnel)
 
 template<typename T>
 class Config
