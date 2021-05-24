@@ -113,36 +113,31 @@ public:
 
     int checkPack();
 
-    static std::task<> readMsg(std::shared_ptr<Socket> socket, char *rcvBuff, ssize_t *nbRcved, msgHdr *h)
+    static std::task<> readMsg(std::shared_ptr<Socket> socket, char *rcvBuff, ssize_t *nbRcved)
     {
+        if((*nbRcved) != 0)
+        {
+            // if((*nbRcved) > h->len)
+            // {
+            //     *nbRcved -= h->len;
+            //     memcpy(rcvBuff, rcvBuff + h->len, (*nbRcved) - h->len);
+            // } else
+            // {
+            //     *nbRcved = 0;
+            // }
+        }
         ssize_t res;
         while((*nbRcved) < 4)
         {
             res = co_await socket->recv(rcvBuff, RCV_BUFF_SIZE - (*nbRcved));
             (*nbRcved) += res;
         }
-        h = (msgHdr *)rcvBuff;
+        msgHdr *h = (msgHdr *)rcvBuff;
         while((*nbRcved) < h->len)
         {
             res = co_await socket->recv(rcvBuff, RCV_BUFF_SIZE - (*nbRcved));
             (*nbRcved) += res;
         }
-        if((*nbRcved) > h->len)
-        {
-            *nbRcved -= h->len;
-            memcpy(rcvBuff, rcvBuff + h->len, (*nbRcved) - h->len);
-        } else
-        {
-            *nbRcved = 0;
-        }
-        // if(begin == 0 && checked == end)
-        // {
-        //     checked = end = 0;
-        // }
-        // else
-        // {
-        //     begin = checked;
-        // }
     }
 
 	template <typename T>

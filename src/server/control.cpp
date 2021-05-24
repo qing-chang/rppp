@@ -32,9 +32,10 @@ void Control::stopper()
 
 std::task<> Control::controlCoRoutine()
 {
-    bool run = true;
-    ssize_t rsize,nbRecv;
-    while (run)
+    // ssize_t rsize,nbRecv;
+    char rcvBuff[RCV_BUFF_SIZE];
+    ssize_t nbRcved = 0;
+    while (true)
     {
         // while(true)
         // {
@@ -48,15 +49,13 @@ std::task<> Control::controlCoRoutine()
         //         continue;
         //     else
         // }
-        char rcvBuff[RCV_BUFF_SIZE];
-        ssize_t nbRcved = 0;
-        msgHdr *h;
-        co_await Msg::readMsg(socket, rcvBuff, &nbRcved, h);
-        switch(h->type)
+        co_await Msg::readMsg(socket, rcvBuff, &nbRcved);
+        switch(((msgHdr *)rcvBuff)->type)
         {
         case msgType::Auth :
+            // std::cout << "auth............" << std::endl;
             auth auth_;
-            iguana::json::from_json0(auth_, rcvBuff + 4, h->len - 4);
+            iguana::json::from_json0(auth_, rcvBuff + 4, ((msgHdr *)rcvBuff)->len - 4);
             std::cout <<"auth_user:"<< auth_.user << std::endl;
             std::cout <<"auth_password:"<< auth_.password << std::endl;
             break;
@@ -73,9 +72,5 @@ std::task<> Control::controlCoRoutine()
         //     nbSend += res;
         // }
         // std::cout << "DONE (" << nbRecv << ")" << '\n';
-        // if (nbRecv <= 0)
-            // run = false;
-        // else
-        //     printf("%s\n", buffer);
     }
 }
