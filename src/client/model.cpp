@@ -24,15 +24,16 @@ std::task<> ClientModel::control()
         std::cout << "connect succeed" << std::endl;
     }
     //---------------------------------------发生auth-----------------------------------------------------------
-    unsigned char sndBuff[1024];
+    char sndBuff[1024];
     iguana::string_stream auth_ss;
     auth auth_ = {"chang", "123456"};
 	iguana::json::to_json(auth_ss, auth_);
+    // std::cout <<"auth_json："<< auth_ss.str() << std::endl;
     auto json_str = auth_ss.str();
-    json_str.copy(sndBuff, json_str.length(), 4);
-    msgHdr *h = (msgHdr *)sndBuff;
-    *h = {msgType.Auth, json_str.length()};
+    json_str.copy(sndBuff + 4, json_str.length(), 0);
     ssize_t nbSend = json_str.length() + 4;
+    msgHdr *h = (msgHdr *)sndBuff;
+    *h = {msgType::Auth, (uint16_t)(nbSend)};
     ssize_t nbSended = 0;
     while (nbSended < nbSend)
     {
@@ -42,5 +43,5 @@ std::task<> ClientModel::control()
         nbSended += res;
     }
     //---------------------------------------接收auth-----------------------------------------------------------
-
+    
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include "../socket/socket.h"
+#include "../json/json.hpp"
 
 #define BUFFER_SIZE 1024
 
@@ -32,6 +33,7 @@ struct auth
 	// Arch      string
 	// ClientId  string // empty for new sessions
 };
+REFLECTION(auth, user, password)
 
 struct authResp
 {
@@ -40,6 +42,7 @@ struct authResp
 	std::string clientId;
 	// Error     string
 };
+// REFLECTION(authResp, clientId)
 
 struct reqTunnel
 {
@@ -54,6 +57,7 @@ struct reqTunnel
 	// // tcp only
 	// RemotePort uint16
 };
+// REFLECTION(reqTunnel)
 
 struct newTunnel
 {
@@ -62,6 +66,7 @@ struct newTunnel
 	// Protocol string
 	// Error    string
 };
+// REFLECTION(newTunnel)
 
 struct ReqProxy
 {
@@ -78,6 +83,7 @@ struct StartProxy
 	// Url        string // URL of the tunnel this connection connection is being proxied for
 	// ClientAddr string // Network address of the client initiating the connection to the tunnel
 };
+// REFLECTION(StartProxy)
 
 struct ping
 {

@@ -1,5 +1,7 @@
 #include "control.h"
 
+#define RCV_BUFF_SIZE 1024
+
 void Control::NewControl()
 {
     
@@ -61,20 +63,41 @@ std::task<> Control::controlCoRoutine()
         //     }
         // }
         // run = co_await inside_loop(*socket);
-        char buffer[1024] = {0};
-        ssize_t nbRecv = co_await socket->recv(buffer, sizeof buffer);
-        ssize_t nbSend = 0;
-        while (nbSend < nbRecv)
+        char rcvBuff[RCV_BUFF_SIZE];
+        ssize_t nbRcved, res;
+start:
+        nbRcved = 0;
+        while(nbRcved < 4)
         {
-            ssize_t res = co_await socket->send(buffer, sizeof buffer);
-            if (res <= 0)
-                break;
-            nbSend += res;
+            res = co_await socket->recv(rcvBuff, RCV_BUFF_SIZE - nbRcved);
+            nbRcved += res;
         }
-        std::cout << "DONE (" << nbRecv << ")" << '\n';
-        if (nbRecv <= 0)
-            run = false;
-        else
-            printf("%s\n", buffer);
+parse_hdr:
+        msgHdr *h = (msgHdr *)rcvBuff;
+        while(nbRcved < h->len)
+        {
+            res = co_await socket->recv(rcvBuff, RCV_BUFF_SIZE - nbRcved);
+            nbRcved += res;
+        }
+        auth auth_;
+        iguana::json::from_json0(auth_, rcvBuff + 4, h->len - 4);
+        std::cout <<"auth_user:"<< auth_.user <<"auth_password:"<< auth_.password << std::endl;
+      
+        //---------------------------------------
+        // char buffer[1024] = {0};
+        // ssize_t nbRecv = co_await socket->recv(buffer, sizeof buffer);
+        // ssize_t nbSend = 0;
+        // while (nbSend < nbRecv)
+        // {
+        //     ssize_t res = co_await socket->send(buffer, sizeof buffer);
+        //     if (res <= 0)
+        //         break;
+        //     nbSend += res;
+        // }
+        // std::cout << "DONE (" << nbRecv << ")" << '\n';
+        // if (nbRecv <= 0)
+        //     run = false;
+        // else
+        //     printf("%s\n", buffer);
     }
 }
