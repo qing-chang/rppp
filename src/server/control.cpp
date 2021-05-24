@@ -81,7 +81,8 @@ parse_hdr:
         }
         auth auth_;
         iguana::json::from_json0(auth_, rcvBuff + 4, h->len - 4);
-        std::cout <<"auth_user:"<< auth_.user <<"auth_password:"<< auth_.password << std::endl;
+        std::cout <<"auth_user:"<< auth_.user << std::endl;
+        std::cout <<"auth_password:"<< auth_.password << std::endl;
       
         //---------------------------------------
         // char buffer[1024] = {0};
