@@ -15,16 +15,3 @@ int Msg::checkPack()
     // }
     return r;
 }
-
-void Msg::readMsg()
-{
-    //json
-    if(begin == 0 && checked == end)
-    {
-        checked = end = 0;
-    }
-    else
-    {
-        begin = checked;
-    }
-}
