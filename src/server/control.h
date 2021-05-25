@@ -5,6 +5,7 @@
 #include "tunnel.h"
 #include "../socket/socket.h"
 #include "../msg/msg.h"
+#include "../conf/conf.h"
 
 class Control : public Msg
 {

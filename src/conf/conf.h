@@ -23,9 +23,11 @@ REFLECTION(confTunnel, type, name, localAddr, localPort, remotePort)
 struct confClient{
 	std::string serverAddr;
 	int serverPort;
+	std::string userName;
+	std::string password;
 	std::list<confTunnel> tunnel;
 };
-REFLECTION(confClient, serverAddr, serverPort, tunnel)
+REFLECTION(confClient, serverAddr, serverPort, userName, password, tunnel)
 
 template<typename T>
 class Config

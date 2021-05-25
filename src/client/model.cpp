@@ -25,7 +25,7 @@ std::task<> ClientModel::control()
     }
     //---------------------------------------发生auth-----------------------------------------------------------
     char sndBuff[1024];
-    auth auth_ = {"chang", "123456"};
+    auth auth_ = {(config.conf)->userName, (config.conf)->password};
     co_await Msg::writeMsg(socket, sndBuff, msgType::Auth, &auth_);
     //---------------------------------------接收auth-----------------------------------------------------------
     
