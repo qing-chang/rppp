@@ -42,24 +42,30 @@ std::task<> Control::controlCoRoutine()
     while (true)
     {
         co_await Msg::readMsg(socket, rcvBuff, &nbRcved);
-        if(((msgHdr *)rcvBuff)->type ==msgType::Auth)
+        switch(((msgHdr *)rcvBuff)->type)
         {
-            auth auth_;
-            iguana::json::from_json0(auth_, rcvBuff + 4, ((msgHdr *)rcvBuff)->len - 4);
-            std::cout <<"auth_user:"<< auth_.user << std::endl;
-            std::cout <<"auth_password:"<< auth_.password << std::endl;
-            auto got = (config.conf)->user.find(auth_.user);
-            if ((got != (config.conf)->user.end()) && (got->second == auth_.password))
+        case msgType::Auth :
             {
-                initControl();
-            } else
-            {
-                co_return;
+                auth auth_;
+                iguana::json::from_json0(auth_, rcvBuff + 4, ((msgHdr *)rcvBuff)->len - 4);
+                std::cout <<"auth_user:"<< auth_.user << std::endl;
+                std::cout <<"auth_password:"<< auth_.password << std::endl;
+                auto got = (config.conf)->user.find(auth_.user);
+                if ((got != (config.conf)->user.end()) && (got->second == auth_.password))
+                {
+                    initControl();
+                } else
+                {
+                    co_return;
+                }
+                break;
             }
-        }else if(((msgHdr *)rcvBuff)->type ==msgType::RegProxy)
-        {
-            regProxy regProxy_;
-            iguana::json::from_json0(regProxy_, rcvBuff + 4, ((msgHdr *)rcvBuff)->len - 4);
+        case msgType::RegProxy :
+            {
+                regProxy regProxy_;
+                iguana::json::from_json0(regProxy_, rcvBuff + 4, ((msgHdr *)rcvBuff)->len - 4);
+                break;
+            }
         }
         //---------------------------------------
         // char buffer[1024] = {0};
