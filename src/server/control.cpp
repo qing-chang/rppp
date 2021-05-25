@@ -46,7 +46,16 @@ std::task<> Control::controlCoRoutine()
             iguana::json::from_json0(auth_, rcvBuff + 4, ((msgHdr *)rcvBuff)->len - 4);
             std::cout <<"auth_user:"<< auth_.user << std::endl;
             std::cout <<"auth_password:"<< auth_.password << std::endl;
-            initControl();
+            // if(){
+                initControl();
+            // } else
+            // {
+            //     co_return;
+            // }
+            break;
+        case msgType::RegProxy :
+            regProxy regProxy_;
+            iguana::json::from_json0(regProxy_, rcvBuff + 4, ((msgHdr *)rcvBuff)->len - 4);
             break;
         }
         //---------------------------------------

@@ -36,7 +36,10 @@ int main()
         printf("配置文件载入失败，退出!\n");
         exit(1);
     }
-
+    // iguana::string_stream ss;
+    // confServer t = *(config.conf);
+	// iguana::json::to_json(ss, t);
+	// std::cout <<"配置json："<< ss.str() << std::endl;
 	//开始监听端口，等待客户端链入
     io_context.init();
     std::shared_ptr<Socket> listener = std::shared_ptr<Socket>(new Socket{io_context, config.conf->bindPort});

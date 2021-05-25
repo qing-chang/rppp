@@ -69,17 +69,17 @@ struct newTunnel
 };
 // REFLECTION(newTunnel)
 
-struct ReqProxy
+struct reqProxy
 {
 
 };
 
-struct RegProxy
+struct regProxy
 {
-// ClientId string
+    std::string clientId;
 };
 
-struct StartProxy
+struct startProxy
 {
 	// Url        string // URL of the tunnel this connection connection is being proxied for
 	// ClientAddr string // Network address of the client initiating the connection to the tunnel
@@ -110,14 +110,15 @@ public:
     {
         if((*nbRcved) != 0)
         {
-            // if((*nbRcved) > h->len)
-            // {
-            //     *nbRcved -= h->len;
-            //     memcpy(rcvBuff, rcvBuff + h->len, (*nbRcved) - h->len);
-            // } else
-            // {
-            //     *nbRcved = 0;
-            // }
+            ssize_t len_ = ((msgHdr *)rcvBuff)->len;
+            if((*nbRcved) > len_)
+            {
+                *nbRcved -= len_;
+                memcpy(rcvBuff, rcvBuff + len_, (*nbRcved) - len_);
+            } else
+            {
+                *nbRcved = 0;
+            }
         }
         ssize_t res;
         while((*nbRcved) < 4)

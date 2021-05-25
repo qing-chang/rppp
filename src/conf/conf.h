@@ -7,9 +7,9 @@
 
 struct confServer{
 	int bindPort;
-	std::string token;
+    std::unordered_map<std::string, std::string> user;
 };
-REFLECTION(confServer, bindPort, token)
+REFLECTION(confServer, bindPort, user)
 
 struct confTunnel{
 	std::string type;
