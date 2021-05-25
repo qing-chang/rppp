@@ -52,14 +52,14 @@ std::task<> Control::controlCoRoutine()
             if ((got != (config.conf)->user.end()) && (got->second == auth_.password))
             {
                 initControl();
-            // } else
-            // {
-            //     co_return;
+            } else
+            {
+                co_return;
             }
         }else if(((msgHdr *)rcvBuff)->type ==msgType::RegProxy)
         {
-        //     regProxy regProxy_;
-        //     iguana::json::from_json0(regProxy_, rcvBuff + 4, ((msgHdr *)rcvBuff)->len - 4);
+            regProxy regProxy_;
+            iguana::json::from_json0(regProxy_, rcvBuff + 4, ((msgHdr *)rcvBuff)->len - 4);
         }
         //---------------------------------------
         // char buffer[1024] = {0};

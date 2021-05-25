@@ -78,6 +78,7 @@ struct regProxy
 {
     std::string clientId;
 };
+REFLECTION(regProxy, clientId)
 
 struct startProxy
 {
