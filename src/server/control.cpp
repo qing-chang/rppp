@@ -4,7 +4,7 @@ extern Config<confServer> config;
 
 void Control::initControl()
 {
-    std::cout <<"initControl:"<< std::endl;
+    std::cout <<"initControl.............."<< std::endl;
     authResp authResp_ = {"xxxxxx"};
     
 }
@@ -46,24 +46,22 @@ std::task<> Control::controlCoRoutine()
         {
         case msgType::Auth :
             {
-                // auth auth_;
-                // iguana::json::from_json0(auth_, rcvBuff + 4, ((msgHdr *)rcvBuff)->len - 4);
                 std::cout <<"auth_user:"<< std::static_pointer_cast<auth>(msg.msg_)->user << std::endl;
                 std::cout <<"auth_password:"<<  std::static_pointer_cast<auth>(msg.msg_)->password << std::endl;
-                // auto got = (config.conf)->user.find(auth_.user);
-                // if ((got != (config.conf)->user.end()) && (got->second == auth_.password))
-                // {
-                //     initControl();
-                // } else
-                // {
-                //     co_return;
-                // }
+                auto got = (config.conf)->user.find(std::static_pointer_cast<auth>(msg.msg_)->user);
+                if ((got != (config.conf)->user.end()) && 
+                    (got->second == std::static_pointer_cast<auth>(msg.msg_)->password))
+                {
+                    initControl();
+                } else
+                {
+                    co_return;
+                }
                 break;
             }
         case msgType::RegProxy :
             {
-                regProxy regProxy_;
-                iguana::json::from_json0(regProxy_, rcvBuff + 4, ((msgHdr *)rcvBuff)->len - 4);
+                // iguana::json::from_json0(regProxy_, rcvBuff + 4, ((msgHdr *)rcvBuff)->len - 4);
                 break;
             }
         default:
