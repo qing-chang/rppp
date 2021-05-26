@@ -6,7 +6,7 @@ void Control::initControl()
 {
     std::cout <<"initControl.............."<< std::endl;
     authResp authResp_ = {"xxxxxx"};
-    
+    //---------------------------------------
 }
 
 void Control::registerTunnel()
@@ -65,22 +65,10 @@ std::task<> Control::controlCoRoutine()
             }
         case msgType::RegProxy :
             {
-                // iguana::json::from_json0(regProxy_, rcvBuff + 4, ((msgHdr *)rcvBuff)->len - 4);
                 break;
             }
         default:
             break;
         }
-        //---------------------------------------
-        // char buffer[1024] = {0};
-        // ssize_t nbRecv = co_await socket->recv(buffer, sizeof buffer);
-        // ssize_t nbSend = 0;
-        // while (nbSend < nbRecv)
-        // {
-        //     ssize_t res = co_await socket->send(buffer, sizeof buffer);
-        //     if (res <= 0)
-        //         break;
-        //     nbSend += res;
-        // }
     }
 }
