@@ -3,6 +3,7 @@
 #include "../json/json.hpp"
 
 #define BUFFER_SIZE 1024
+#define SND_BUFF_SIZE 1024
 #define RCV_BUFF_SIZE 1024
 
 struct msgHdr
@@ -150,16 +151,22 @@ public:
         }
     }
 
-	template <typename T>
-    static std::task<> writeMsg(std::shared_ptr<Socket> socket, char *sndBuff, enum msgType type, T *t)
+    static std::task<> writeMsg(std::shared_ptr<Socket> socket, char *sndBuff, Msg *pmsg)
     {
         iguana::string_stream auth_ss;
-        iguana::json::to_json(auth_ss, *t);
+        switch(pmsg->type)
+        {
+        case  msgType::Auth :
+            iguana::json::to_json(auth_ss, *(std::static_pointer_cast<auth>(pmsg->msg_)));
+            break;
+        case msgType::RegProxy :
+            break;
+        }
         auto json_str = auth_ss.str();
         json_str.copy(sndBuff + 4, json_str.length(), 0);
         ssize_t nbSend = json_str.length() + 4;
         msgHdr *h = (msgHdr *)sndBuff;
-        *h = {type, (uint16_t)(nbSend)};
+        *h = {pmsg->type, (uint16_t)(nbSend)};
         ssize_t nbSended = 0;
         while (nbSended < nbSend)
         {

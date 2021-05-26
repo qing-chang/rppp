@@ -11,16 +11,19 @@ class Control : public Msg
 {
 public:
     std::shared_ptr<Socket> socket;
-    Msg msg;
-    Channel<int> in;
-    Channel<int> out;
+    Channel<Msg> in;
+    Channel<Msg> out;
+    auth auth_;
     std::vector<Tunnel> tunnels;
+    // Msg msg;
+
     Control(){}
-    void initControl();
+    std::task<> initControl();
     void registerTunnel();
-    void writer();
-    void reader();
-    void manager();
-    void stopper();
+    std::task<> writer();
+    std::task<> reader();
+    std::task<> manager();
+    std::task<> stopper();
     std::task<> controlCoRoutine();
+    void close();
 };

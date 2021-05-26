@@ -24,9 +24,12 @@ std::task<> ClientModel::control()
         std::cout << "connect succeed" << std::endl;
     }
     //---------------------------------------发生auth-----------------------------------------------------------
-    char sndBuff[1024];
-    auth auth_ = {(config.conf)->userName, (config.conf)->password};
-    co_await Msg::writeMsg(socket, sndBuff, msgType::Auth, &auth_);
+    char sndBuff[SND_BUFF_SIZE];
+    Msg msg;
+    msg.type = msgType::Auth;
+    std::shared_ptr<auth> auth_ = std::shared_ptr<auth>(new auth{(config.conf)->userName, (config.conf)->password});
+    msg.msg_ = std::static_pointer_cast<void>(auth_);
+    co_await Msg::writeMsg(socket, sndBuff, &msg);
     //---------------------------------------接收auth-----------------------------------------------------------
     
 }
