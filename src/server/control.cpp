@@ -36,28 +36,28 @@ void Control::stopper()
 
 std::task<> Control::controlCoRoutine()
 {
-    // ssize_t rsize,nbRecv;
     char rcvBuff[RCV_BUFF_SIZE];
     ssize_t nbRcved = 0;
     while (true)
     {
-        co_await Msg::readMsg(socket, rcvBuff, &nbRcved);
-        switch(((msgHdr *)rcvBuff)->type)
+        Msg msg;
+        co_await Msg::readMsg(socket, rcvBuff, &nbRcved, &msg);
+        switch(msg.type)
         {
         case msgType::Auth :
             {
-                auth auth_;
-                iguana::json::from_json0(auth_, rcvBuff + 4, ((msgHdr *)rcvBuff)->len - 4);
-                std::cout <<"auth_user:"<< auth_.user << std::endl;
-                std::cout <<"auth_password:"<< auth_.password << std::endl;
-                auto got = (config.conf)->user.find(auth_.user);
-                if ((got != (config.conf)->user.end()) && (got->second == auth_.password))
-                {
-                    initControl();
-                } else
-                {
-                    co_return;
-                }
+                // auth auth_;
+                // iguana::json::from_json0(auth_, rcvBuff + 4, ((msgHdr *)rcvBuff)->len - 4);
+                std::cout <<"auth_user:"<< std::static_pointer_cast<auth>(msg.msg_)->user << std::endl;
+                std::cout <<"auth_password:"<<  std::static_pointer_cast<auth>(msg.msg_)->password << std::endl;
+                // auto got = (config.conf)->user.find(auth_.user);
+                // if ((got != (config.conf)->user.end()) && (got->second == auth_.password))
+                // {
+                //     initControl();
+                // } else
+                // {
+                //     co_return;
+                // }
                 break;
             }
         case msgType::RegProxy :
@@ -66,6 +66,8 @@ std::task<> Control::controlCoRoutine()
                 iguana::json::from_json0(regProxy_, rcvBuff + 4, ((msgHdr *)rcvBuff)->len - 4);
                 break;
             }
+        default:
+            break;
         }
         //---------------------------------------
         // char buffer[1024] = {0};

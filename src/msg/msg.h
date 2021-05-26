@@ -103,11 +103,12 @@ public:
     ~Msg()
     {}
 
-    char buffer[BUFFER_SIZE];
+    // char buffer[BUFFER_SIZE];
 
     enum msgType type;
+    std::shared_ptr<void> msg_;     //std::any?
 
-    static std::task<> readMsg(std::shared_ptr<Socket> socket, char *rcvBuff, ssize_t *nbRcved)
+    static std::task<> readMsg(std::shared_ptr<Socket> socket, char *rcvBuff, ssize_t *nbRcved, Msg *pmsg)
     {
         if((*nbRcved) != 0)
         {
@@ -132,6 +133,15 @@ public:
         {
             res = co_await socket->recv(rcvBuff, RCV_BUFF_SIZE - (*nbRcved));
             (*nbRcved) += res;
+        }
+        pmsg->type = (msgType)(h->type);
+        switch(pmsg->type)
+        {
+        case  msgType::Auth :
+            pmsg->msg_ = std::shared_ptr<auth>(new auth);
+            // std::shared_ptr<auth> pauth = ;
+        iguana::json::from_json0(*(std::static_pointer_cast<auth>(pmsg->msg_)), rcvBuff + 4, ((msgHdr *)rcvBuff)->len - 4);
+            break;
         }
     }
 
