@@ -153,16 +153,19 @@ public:
 
     static std::task<> writeMsg(std::shared_ptr<Socket> socket, char *sndBuff, Msg *pmsg)
     {
-        iguana::string_stream auth_ss;
+        iguana::string_stream ss;
         switch(pmsg->type)
         {
         case  msgType::Auth :
-            iguana::json::to_json(auth_ss, *(std::static_pointer_cast<auth>(pmsg->msg_)));
+            iguana::json::to_json(ss, *(std::static_pointer_cast<auth>(pmsg->msg_)));
+            break;
+        case  msgType::AuthResp :
+            iguana::json::to_json(ss, *(std::static_pointer_cast<authResp>(pmsg->msg_)));
             break;
         case msgType::RegProxy :
             break;
         }
-        auto json_str = auth_ss.str();
+        auto json_str = ss.str();
         json_str.copy(sndBuff + 4, json_str.length(), 0);
         ssize_t nbSend = json_str.length() + 4;
         msgHdr *h = (msgHdr *)sndBuff;

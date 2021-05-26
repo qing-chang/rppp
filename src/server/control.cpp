@@ -6,10 +6,14 @@ std::task<> Control::initControl()
 {
     std::cout <<"initControl.............."<< std::endl;
     //---------------------------------------
-    writer().resume;
-    // //---------------------------------------
-    authResp authResp_ = {"xxxxxx"};
-
+    writer().resume();
+    //---------------------------------------
+    char sndBuff[SND_BUFF_SIZE];
+    Msg msg;
+    msg.type = msgType::AuthResp;
+    std::shared_ptr<authResp> authResp_(new authResp{"xxxxxx"});
+    msg.msg_ = std::static_pointer_cast<void>(authResp_);
+    co_await out.write(msg);
     // //---------------------------------------
     // reader().resume;
     // manager().resume;
@@ -69,7 +73,7 @@ std::task<> Control::controlCoRoutine()
                 {
                     //认证成功
                     std::cout <<"认证成功"<< std::endl;
-                    initControl();
+                    initControl().resume();
                 } else
                 {
                     //认证失败
