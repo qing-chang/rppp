@@ -13,9 +13,9 @@ std::task<> Control::initControl()
     msg.type = msgType::AuthResp;
     std::shared_ptr<authResp> authResp_(new authResp{"xxxxxx"});
     msg.msg_ = std::static_pointer_cast<void>(authResp_);
-    co_await out.write(msg);
+    // co_await out.write(msg);
     // //---------------------------------------
-    // reader().resume;
+    reader().resume();
     // manager().resume;
     // stopper().resume;
 }
@@ -40,6 +40,14 @@ std::task<> Control::writer()
 std::task<> Control::reader()
 {
     std::cout <<"启动reader"<< std::endl;
+    char rcvBuff[RCV_BUFF_SIZE];
+    ssize_t nbRcved = 0;
+    Msg msg;
+    while (true)
+    {
+        co_await Msg::readMsg(socket, rcvBuff, &nbRcved, &msg);
+        co_await in.write(msg);
+    }
 }
 
 std::task<> Control::manager()

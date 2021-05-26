@@ -44,12 +44,12 @@ struct authResp
 	std::string clientId;
 	// Error     string
 };
-// REFLECTION(authResp, clientId)
+REFLECTION(authResp, clientId)
 
 struct reqTunnel
 {
 	// ReqId    string
-	// Protocol string
+	std::string protocol;
 
 	// // http only
 	// Hostname  string
@@ -59,7 +59,7 @@ struct reqTunnel
 	// // tcp only
 	// RemotePort uint16
 };
-// REFLECTION(reqTunnel)
+REFLECTION(reqTunnel, protocol)
 
 struct newTunnel
 {
