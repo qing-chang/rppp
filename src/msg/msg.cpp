@@ -80,7 +80,9 @@ namespace _msg_
         case  msgType::NewTunnel :
             iguana::json::to_json(ss, *(std::static_pointer_cast<newTunnel>(pmsg->msg_)));
             break;
-        case msgType::RegProxy :
+        case msgType::Ping :
+        case msgType::Pong :
+        default :
             break;
         }
         auto json_str = ss.str();

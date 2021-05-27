@@ -5,16 +5,21 @@ extern Config<confServer> config;
 std::task<> Control::initControl()
 {
     std::cout <<"initControl.............."<< std::endl;
-    //---------------------------------------
+    //----------------------------------------------
     writer().resume();
-    //---------------------------------------
+    //-----------------发送AuthResp------------------
     char sndBuff[SND_BUFF_SIZE];
     Msg msg;
     msg.type = msgType::AuthResp;
     std::shared_ptr<authResp> authResp_(new authResp{"xxxxxx"});
     msg.msg_ = std::static_pointer_cast<void>(authResp_);
     co_await out.write(msg);
-    // //---------------------------------------
+    //----------------发送ReqProxy----------------------
+    msg.type = msgType::ReqProxy;
+    std::shared_ptr<reqProxy> reqProxy_(new reqProxy{"xxxxxx"});
+    msg.msg_ = std::static_pointer_cast<void>(reqProxy_);
+    // co_await out.write(msg);
+    //---------------------------------------
     manager().resume();
     reader().resume();
     // stopper().resume();
@@ -53,6 +58,7 @@ std::task<> Control::reader()
 std::task<> Control::manager()
 {
     std::cout <<"启动manager"<< std::endl;
+    char sndBuff[SND_BUFF_SIZE];
     Msg msg;
     while (true)
     {
@@ -66,6 +72,11 @@ std::task<> Control::manager()
             tunnel->remotePort = reqTunnel_->remotePort;
             tunnel->NewTunnel().resume();
             tunnels.push_back(tunnel);
+            break;
+        case msgType::Ping :
+            std::cout <<"收到Ping"<< std::endl;
+            msg.type = msgType::Pong;
+            co_await _msg_::writeMsg(socket, sndBuff, &msg);
             break;
         }
     }

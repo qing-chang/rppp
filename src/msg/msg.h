@@ -2,7 +2,6 @@
 #include "../socket/socket.h"
 #include "../json/json.hpp"
 
-// #define BUFFER_SIZE 1024
 #define SND_BUFF_SIZE 1024
 #define RCV_BUFF_SIZE 1024
 
@@ -54,8 +53,9 @@ REFLECTION(newTunnel, tunnelId)
 
 struct reqProxy
 {
-
+    std::string clientId;
 };
+REFLECTION(reqProxy, clientId)
 
 struct regProxy
 {
@@ -65,18 +65,9 @@ REFLECTION(regProxy, clientId)
 
 struct startProxy
 {
-	// Url        string // URL of the tunnel this connection connection is being proxied for
-	// ClientAddr string // Network address of the client initiating the connection to the tunnel
+	std::string clientAddr;
 };
-// REFLECTION(StartProxy)
-
-struct ping
-{
-};
-
-struct pong
-{
-};
+REFLECTION(StartProxy, clientAddr)
 
 struct Msg
 {
