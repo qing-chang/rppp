@@ -11,11 +11,9 @@ class Control : public Msg
 {
 public:
     std::shared_ptr<Socket> socket;
-    Channel<Msg> in;
-    Channel<Msg> out;
+    Channel<Msg> in, out;
     auth auth_;
     std::vector<Tunnel> tunnels;
-    // Msg msg;
 
     Control(){}
     std::task<> initControl();

@@ -13,11 +13,11 @@ std::task<> Control::initControl()
     msg.type = msgType::AuthResp;
     std::shared_ptr<authResp> authResp_(new authResp{"xxxxxx"});
     msg.msg_ = std::static_pointer_cast<void>(authResp_);
-    // co_await out.write(msg);
+    co_await out.write(msg);
     // //---------------------------------------
+    manager().resume();
     reader().resume();
-    // manager().resume;
-    // stopper().resume;
+    // stopper().resume();
 }
 
 void Control::registerTunnel()
@@ -33,6 +33,7 @@ std::task<> Control::writer()
     while (true)
     {
         msg = co_await out.read();
+        std::cout <<"out.........."<< std::endl;
         co_await Msg::writeMsg(socket, sndBuff, &msg);
     }
 }
@@ -53,6 +54,17 @@ std::task<> Control::reader()
 std::task<> Control::manager()
 {
     std::cout <<"启动manager"<< std::endl;
+    Msg msg;
+    while (true)
+    {
+        msg = co_await in.read();
+        switch(msg.type)
+        {
+        case msgType::Auth :
+
+            break;
+        }
+    }
 }
 
 std::task<> Control::stopper()

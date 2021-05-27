@@ -37,6 +37,8 @@ public:
 				ch.receiver = h;
 			if (!ch._list.empty())
 				h.resume();
+			if (ch.sender && ch.sender != h)
+				ch.sender.resume();
 		}
 		Type await_resume() noexcept(false)
 		{
@@ -58,6 +60,8 @@ public:
 		void await_suspend(std::coroutine_handle<> h) noexcept(false)
 		{
 			ch._list.push_back(obj_);
+			if (!ch.sender)
+				ch.sender = h;
 			if (ch.receiver && ch.receiver != h)
 				ch.receiver.resume();
 		}
@@ -108,5 +112,5 @@ public:
 
 public:
 	std::list<Type> _list;
-	std::coroutine_handle<> receiver;
+	std::coroutine_handle<> sender, receiver;
 };
