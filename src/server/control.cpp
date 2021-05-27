@@ -60,7 +60,7 @@ std::task<> Control::manager()
         switch(msg.type)
         {
         case msgType::ReqTunnel :
-            std::cout <<"收到ReqTunnel"<< std::endl;
+            // std::cout <<"收到ReqTunnel"<< std::endl;
 
             break;
         }
@@ -76,39 +76,36 @@ std::task<> Control::controlCoRoutine()
 {
     char rcvBuff[RCV_BUFF_SIZE];
     ssize_t nbRcved = 0;
-    // while (true)
-    // {
-        Msg msg;
-        co_await Msg::readMsg(socket, rcvBuff, &nbRcved, &msg);
-        switch(msg.type)
+    Msg msg;
+    co_await Msg::readMsg(socket, rcvBuff, &nbRcved, &msg);
+    switch(msg.type)
+    {
+    case msgType::Auth :
         {
-        case msgType::Auth :
+            auth_ = *(std::static_pointer_cast<auth>(msg.msg_));
+            auto got = (config.conf)->user.find(auth_.user);
+            if ((got != (config.conf)->user.end()) && (got->second == auth_.password))
             {
-                auth_ = *(std::static_pointer_cast<auth>(msg.msg_));
-                auto got = (config.conf)->user.find(auth_.user);
-                if ((got != (config.conf)->user.end()) && (got->second == auth_.password))
-                {
-                    //认证成功
-                    std::cout <<"认证成功"<< std::endl;
-                    initControl().resume();
-                } else
-                {
-                    //认证失败
-                    std::cout <<"认证失败"<< std::endl;
-                    close();
-                    co_return;
-                }
-                break;
-            }
-        case msgType::RegProxy :
+                //认证成功
+                std::cout <<"认证成功"<< std::endl;
+                initControl().resume();
+            } else
             {
-                break;
+                //认证失败
+                std::cout <<"认证失败"<< std::endl;
+                close();
+                co_return;
             }
-        default:
-            close();
             break;
         }
-    // }
+    case msgType::RegProxy :
+        {
+            break;
+        }
+    default:
+        close();
+        break;
+    }
 }
 
 void Control::close()

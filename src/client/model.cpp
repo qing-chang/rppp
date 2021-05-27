@@ -47,7 +47,7 @@ std::task<> ClientModel::control()
     std::shared_ptr<reqTunnel> reqTunnel_;
     for(auto t:(config.conf)->tunnel)
     {
-        reqTunnel_ = std::shared_ptr<reqTunnel>(new reqTunnel{t.type, t.name, t.localAddr, t.localPort, t.remotePort});
+        reqTunnel_ = std::shared_ptr<reqTunnel>(new reqTunnel{t.type, t.name, t.remotePort});
         msg.msg_ = std::static_pointer_cast<void>(reqTunnel_);
         co_await Msg::writeMsg(socket, sndBuff, &msg);
     }

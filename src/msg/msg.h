@@ -50,11 +50,11 @@ struct reqTunnel
 {
 	std::string type;
     std::string name;
-	std::string localAddr;
-	int localPort;
+	// std::string localAddr;
+	// int localPort;
 	int remotePort;
 };
-REFLECTION(reqTunnel, type, name, localAddr, localPort, remotePort)
+REFLECTION(reqTunnel, type, name, remotePort)
 
 struct newTunnel
 {
