@@ -2,7 +2,7 @@
 #include "../socket/socket.h"
 #include "../json/json.hpp"
 
-#define BUFFER_SIZE 1024
+// #define BUFFER_SIZE 1024
 #define SND_BUFF_SIZE 1024
 #define RCV_BUFF_SIZE 1024
 
@@ -27,22 +27,14 @@ enum msgType
 
 struct auth
 {
-	// Version   string // protocol version
-	// MmVersion string // major/minor software version (informational only)
 	std::string user;
 	std::string password;
-	// OS        string
-	// Arch      string
-	// ClientId  string // empty for new sessions
 };
 REFLECTION(auth, user, password)
 
 struct authResp
 {
-	// Version   string
-	// MmVersion string
 	std::string clientId;
-	// Error     string
 };
 REFLECTION(authResp, clientId)
 
@@ -50,8 +42,6 @@ struct reqTunnel
 {
 	std::string type;
     std::string name;
-	// std::string localAddr;
-	// int localPort;
 	int remotePort;
 };
 REFLECTION(reqTunnel, type, name, remotePort)
@@ -59,9 +49,6 @@ REFLECTION(reqTunnel, type, name, remotePort)
 struct newTunnel
 {
 	std::string tunnelId;
-	// Url      string
-	// Protocol string
-	// Error    string
 };
 REFLECTION(newTunnel, tunnelId)
 
@@ -94,10 +81,10 @@ struct pong
 class Msg
 {
 public:
-    Msg()
-    {}
-    ~Msg()
-    {}
+    // Msg()
+    // {}
+    // ~Msg()
+    // {}
 
     msgType type;
     std::shared_ptr<void> msg_;     //std::any?

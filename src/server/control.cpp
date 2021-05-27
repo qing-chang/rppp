@@ -64,7 +64,7 @@ std::task<> Control::manager()
             std::shared_ptr<Tunnel> tunnel = std::shared_ptr<Tunnel>(new Tunnel{this});
             std::shared_ptr<reqTunnel> reqTunnel_ = std::static_pointer_cast<reqTunnel>(msg.msg_);
             tunnel->remotePort = reqTunnel_->remotePort;
-            // tunnel->NewTunnel().resume();
+            tunnel->NewTunnel().resume();
             tunnels.push_back(tunnel);
             break;
         }
