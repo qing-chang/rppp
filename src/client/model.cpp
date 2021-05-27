@@ -30,12 +30,12 @@ std::task<> ClientModel::control()
     msg.type = msgType::Auth;
     std::shared_ptr<auth> auth_(new auth{(config.conf)->userName, (config.conf)->password});
     msg.msg_ = std::static_pointer_cast<void>(auth_);
-    co_await Msg::writeMsg(socket, sndBuff, &msg);
+    co_await _msg_::writeMsg(socket, sndBuff, &msg);
     //---------------------------------------接收auth-----------------------------------------------------------
     ssize_t nbRcved = 0;
     while(true)
     {
-        co_await Msg::readMsg(socket, rcvBuff, &nbRcved, &msg);
+        co_await _msg_::readMsg(socket, rcvBuff, &nbRcved, &msg);
         if(msg.type == msgType::AuthResp)
         {
             std::cout << "认证成功........." << std::endl;
@@ -49,6 +49,6 @@ std::task<> ClientModel::control()
     {
         reqTunnel_ = std::shared_ptr<reqTunnel>(new reqTunnel{t.type, t.name, t.remotePort});
         msg.msg_ = std::static_pointer_cast<void>(reqTunnel_);
-        co_await Msg::writeMsg(socket, sndBuff, &msg);
+        co_await _msg_::writeMsg(socket, sndBuff, &msg);
     }
 }

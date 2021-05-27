@@ -33,7 +33,7 @@ std::task<> Control::writer()
     while (true)
     {
         msg = co_await out.read();
-        co_await Msg::writeMsg(socket, sndBuff, &msg);
+        co_await _msg_::writeMsg(socket, sndBuff, &msg);
     }
 }
 
@@ -45,7 +45,7 @@ std::task<> Control::reader()
     Msg msg;
     while (true)
     {
-        co_await Msg::readMsg(socket, rcvBuff, &nbRcved, &msg);
+        co_await _msg_::readMsg(socket, rcvBuff, &nbRcved, &msg);
         co_await in.write(msg);
     }
 }
@@ -81,7 +81,7 @@ std::task<> Control::controlCoRoutine()
     char rcvBuff[RCV_BUFF_SIZE];
     ssize_t nbRcved = 0;
     Msg msg;
-    co_await Msg::readMsg(socket, rcvBuff, &nbRcved, &msg);
+    co_await _msg_::readMsg(socket, rcvBuff, &nbRcved, &msg);
     switch(msg.type)
     {
     case msgType::Auth :
