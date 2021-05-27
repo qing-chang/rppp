@@ -11,14 +11,14 @@ std::task<> Control::initControl()
     char sndBuff[SND_BUFF_SIZE];
     Msg msg;
     msg.type = msgType::AuthResp;
-    std::shared_ptr<authResp> authResp_(new authResp{"xxxxxx"});
+    std::shared_ptr<authResp> authResp_(new authResp{"xxx--authResp--xxx"});
     msg.msg_ = std::static_pointer_cast<void>(authResp_);
     co_await out.write(msg);
     //----------------发送ReqProxy----------------------
     msg.type = msgType::ReqProxy;
-    std::shared_ptr<reqProxy> reqProxy_(new reqProxy{"xxxxxx"});
+    std::shared_ptr<reqProxy> reqProxy_(new reqProxy{"xxx--reqProxy--xxx"});
     msg.msg_ = std::static_pointer_cast<void>(reqProxy_);
-    // co_await out.write(msg);
+    co_await out.write(msg);
     //---------------------------------------
     manager().resume();
     reader().resume();
@@ -66,18 +66,22 @@ std::task<> Control::manager()
         switch(msg.type)
         {
         case msgType::ReqTunnel :
-            std::cout <<"收到ReqTunnel"<< std::endl;
-            std::shared_ptr<Tunnel> tunnel = std::shared_ptr<Tunnel>(new Tunnel{this});
-            std::shared_ptr<reqTunnel> reqTunnel_ = std::static_pointer_cast<reqTunnel>(msg.msg_);
-            tunnel->remotePort = reqTunnel_->remotePort;
-            tunnel->NewTunnel().resume();
-            tunnels.push_back(tunnel);
-            break;
+            {
+                std::cout <<"收到ReqTunnel"<< std::endl;
+                std::shared_ptr<Tunnel> tunnel = std::shared_ptr<Tunnel>(new Tunnel{this});
+                std::shared_ptr<reqTunnel> reqTunnel_ = std::static_pointer_cast<reqTunnel>(msg.msg_);
+                tunnel->remotePort = reqTunnel_->remotePort;
+                tunnel->NewTunnel().resume();
+                tunnels.push_back(tunnel);
+                break;
+            }
         case msgType::Ping :
-            std::cout <<"收到Ping"<< std::endl;
-            msg.type = msgType::Pong;
-            co_await _msg_::writeMsg(socket, sndBuff, &msg);
-            break;
+            {
+                std::cout <<"收到Ping"<< std::endl;
+                msg.type = msgType::Pong;
+                co_await out.write(msg);
+                break;
+            }
         }
     }
 }

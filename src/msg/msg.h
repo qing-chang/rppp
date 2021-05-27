@@ -53,21 +53,21 @@ REFLECTION(newTunnel, tunnelId)
 
 struct reqProxy
 {
-    std::string clientId;
+    std::string clientId_;
 };
-REFLECTION(reqProxy, clientId)
+REFLECTION(reqProxy, clientId_)
 
 struct regProxy
 {
-    std::string clientId;
+    std::string clientId__;
 };
-REFLECTION(regProxy, clientId)
+REFLECTION(regProxy, clientId__)
 
 struct startProxy
 {
 	std::string clientAddr;
 };
-REFLECTION(StartProxy, clientAddr)
+REFLECTION(startProxy, clientAddr)
 
 struct Msg
 {

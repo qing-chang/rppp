@@ -80,6 +80,9 @@ namespace _msg_
         case  msgType::NewTunnel :
             iguana::json::to_json(ss, *(std::static_pointer_cast<newTunnel>(pmsg->msg_)));
             break;
+        case  msgType::ReqProxy :
+            iguana::json::to_json(ss, *(std::static_pointer_cast<reqProxy>(pmsg->msg_)));
+            break;
         case msgType::Ping :
         case msgType::Pong :
         default :
