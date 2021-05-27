@@ -59,7 +59,8 @@ std::task<> Control::manager()
         msg = co_await in.read();
         switch(msg.type)
         {
-        case msgType::Auth :
+        case msgType::ReqTunnel :
+            std::cout <<"收到ReqTunnel"<< std::endl;
 
             break;
         }
@@ -75,8 +76,8 @@ std::task<> Control::controlCoRoutine()
 {
     char rcvBuff[RCV_BUFF_SIZE];
     ssize_t nbRcved = 0;
-    while (true)
-    {
+    // while (true)
+    // {
         Msg msg;
         co_await Msg::readMsg(socket, rcvBuff, &nbRcved, &msg);
         switch(msg.type)
@@ -107,7 +108,7 @@ std::task<> Control::controlCoRoutine()
             close();
             break;
         }
-    }
+    // }
 }
 
 void Control::close()

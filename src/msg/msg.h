@@ -48,18 +48,13 @@ REFLECTION(authResp, clientId)
 
 struct reqTunnel
 {
-	// ReqId    string
-	std::string protocol;
-
-	// // http only
-	// Hostname  string
-	// Subdomain string
-	// HttpAuth  string
-
-	// // tcp only
-	// RemotePort uint16
+	std::string type;
+    std::string name;
+	std::string localAddr;
+	int localPort;
+	int remotePort;
 };
-REFLECTION(reqTunnel, protocol)
+REFLECTION(reqTunnel, type, name, localAddr, localPort, remotePort)
 
 struct newTunnel
 {
@@ -130,6 +125,18 @@ public:
                                         rcvBuff + 4,
                                         h->len - 4);
             break;
+        case  msgType::AuthResp :
+            pmsg->msg_ = std::shared_ptr<authResp>(new authResp);
+            iguana::json::from_json0(*(std::static_pointer_cast<authResp>(pmsg->msg_)), 
+                                        rcvBuff + 4,
+                                        h->len - 4);
+            break;
+        case  msgType::ReqTunnel :
+            pmsg->msg_ = std::shared_ptr<reqTunnel>(new reqTunnel);
+            iguana::json::from_json0(*(std::static_pointer_cast<reqTunnel>(pmsg->msg_)), 
+                                        rcvBuff + 4,
+                                        h->len - 4);
+            break;
         case msgType::RegProxy :
             pmsg->msg_ = std::shared_ptr<regProxy>(new regProxy);
             iguana::json::from_json0(*(std::static_pointer_cast<regProxy>(pmsg->msg_)),
@@ -161,6 +168,9 @@ public:
             break;
         case  msgType::AuthResp :
             iguana::json::to_json(ss, *(std::static_pointer_cast<authResp>(pmsg->msg_)));
+            break;
+        case  msgType::ReqTunnel :
+            iguana::json::to_json(ss, *(std::static_pointer_cast<reqTunnel>(pmsg->msg_)));
             break;
         case msgType::RegProxy :
             break;

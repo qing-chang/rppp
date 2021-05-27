@@ -44,11 +44,11 @@ std::task<> ClientModel::control()
     }
     //---------------------------------------发送ReqTunnel-------------------------------------------------------
     msg.type = msgType::ReqTunnel;
-    std::shared_ptr<reqTunnel> reqTunnel_(new reqTunnel);
-    msg.msg_ = std::static_pointer_cast<void>(reqTunnel_);
-    // for()
-    // {
-
-    //     co_await Msg::writeMsg(socket, sndBuff, &msg);
-    // }
+    std::shared_ptr<reqTunnel> reqTunnel_;
+    for(auto t:(config.conf)->tunnel)
+    {
+        reqTunnel_ = std::shared_ptr<reqTunnel>(new reqTunnel{t.type, t.name, t.localAddr, t.localPort, t.remotePort});
+        msg.msg_ = std::static_pointer_cast<void>(reqTunnel_);
+        co_await Msg::writeMsg(socket, sndBuff, &msg);
+    }
 }
