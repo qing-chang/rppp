@@ -58,12 +58,12 @@ REFLECTION(reqTunnel, type, name, remotePort)
 
 struct newTunnel
 {
-	// ReqId    string
+	std::string tunnelId;
 	// Url      string
 	// Protocol string
 	// Error    string
 };
-// REFLECTION(newTunnel)
+REFLECTION(newTunnel, tunnelId)
 
 struct reqProxy
 {
@@ -136,6 +136,11 @@ public:
             iguana::json::from_json0(*(std::static_pointer_cast<reqTunnel>(pmsg->msg_)), 
                                         rcvBuff + 4,
                                         h->len - 4);
+        case  msgType::NewTunnel :
+            pmsg->msg_ = std::shared_ptr<newTunnel>(new newTunnel);
+            iguana::json::from_json0(*(std::static_pointer_cast<newTunnel>(pmsg->msg_)), 
+                                        rcvBuff + 4,
+                                        h->len - 4);
             break;
         case msgType::RegProxy :
             pmsg->msg_ = std::shared_ptr<regProxy>(new regProxy);
@@ -171,6 +176,9 @@ public:
             break;
         case  msgType::ReqTunnel :
             iguana::json::to_json(ss, *(std::static_pointer_cast<reqTunnel>(pmsg->msg_)));
+            break;
+        case  msgType::NewTunnel :
+            iguana::json::to_json(ss, *(std::static_pointer_cast<newTunnel>(pmsg->msg_)));
             break;
         case msgType::RegProxy :
             break;

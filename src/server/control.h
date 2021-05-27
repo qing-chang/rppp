@@ -7,13 +7,15 @@
 #include "../msg/msg.h"
 #include "../conf/conf.h"
 
-class Control : public Msg
+class Tunnel;
+
+class Control //: public Msg
 {
 public:
     std::shared_ptr<Socket> socket;
     Channel<Msg> in, out;
     auth auth_;
-    std::vector<Tunnel> tunnels;
+    std::vector<std::shared_ptr<Tunnel>> tunnels;
 
     Control(){}
     std::task<> initControl();

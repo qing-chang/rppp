@@ -1,9 +1,18 @@
 #pragma once
 
+#include <coroutine>
+#include "control.h"
+#include "../frame/task.h"
+
+class Control;
+
 class Tunnel
 {
 public:
-    Tunnel(){}
-    void NewTunnel();
+    int remotePort;
+    Control *control;
+
+    Tunnel(Control *control):control(control){}
+    std::task<> NewTunnel();
     
 };
