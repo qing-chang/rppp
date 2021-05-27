@@ -33,7 +33,6 @@ std::task<> Control::writer()
     while (true)
     {
         msg = co_await out.read();
-        std::cout <<"out.........."<< std::endl;
         co_await Msg::writeMsg(socket, sndBuff, &msg);
     }
 }
@@ -84,12 +83,9 @@ std::task<> Control::controlCoRoutine()
         {
         case msgType::Auth :
             {
-                // std::cout <<"auth_user:"<< std::static_pointer_cast<auth>(msg.msg_)->user << std::endl;
-                // std::cout <<"auth_password:"<<  std::static_pointer_cast<auth>(msg.msg_)->password << std::endl;
                 auth_ = *(std::static_pointer_cast<auth>(msg.msg_));
-                auto got = (config.conf)->user.find(std::static_pointer_cast<auth>(msg.msg_)->user);
-                if ((got != (config.conf)->user.end()) && 
-                    (got->second == std::static_pointer_cast<auth>(msg.msg_)->password))
+                auto got = (config.conf)->user.find(auth_.user);
+                if ((got != (config.conf)->user.end()) && (got->second == auth_.password))
                 {
                     //认证成功
                     std::cout <<"认证成功"<< std::endl;

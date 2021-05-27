@@ -31,5 +31,12 @@ std::task<> ClientModel::control()
     msg.msg_ = std::static_pointer_cast<void>(auth_);
     co_await Msg::writeMsg(socket, sndBuff, &msg);
     //---------------------------------------接收auth-----------------------------------------------------------
-    
+    char rcvBuff[RCV_BUFF_SIZE];
+    ssize_t nbRcved = 0;
+    Msg msg;
+    while(true)
+    {
+        co_await Msg::readMsg(socket, rcvBuff, &nbRcved, &msg);
+
+    }
 }
