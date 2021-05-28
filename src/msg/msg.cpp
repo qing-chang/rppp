@@ -16,6 +16,7 @@ namespace _msg_
             res = co_await socket->recv(rcvBuff + (*nbRcved), RCV_BUFF_SIZE - (*nbRcved));
             (*nbRcved) += res;
         }
+        //---------------------------------------------------------------------------------------------
         pmsg->type = (msgType)(h->type);
         switch(pmsg->type)
         {
@@ -55,18 +56,16 @@ namespace _msg_
                                         h->len - 4);
             break;
         }
-        // if((*nbRcved) != 0)
-        // {
-            ssize_t len_ = h->len;
-            if((*nbRcved) > len_)
-            {
-                memcpy(rcvBuff, rcvBuff + len_, (*nbRcved) - len_);
-                *nbRcved -= len_;
-            } else
-            {
-                *nbRcved = 0;
-            }
-        // }
+        //---------------------------------------------------------------------------------------------
+        ssize_t len_ = h->len;
+        if((*nbRcved) > len_)
+        {
+            memcpy(rcvBuff, rcvBuff + len_, (*nbRcved) - len_);
+            *nbRcved -= len_;
+        } else
+        {
+            *nbRcved = 0;
+        }
     }
 
     std::task<> writeMsg(std::shared_ptr<Socket> socket, char *sndBuff, Msg *pmsg)
