@@ -56,10 +56,7 @@ std::task<> ClientModel::control()
     //---------------------------------------主循环-------------------------------------------------------
     while(true)
     {
-    // std::cout <<"启动1..............."<< std::endl;
-    Msg msg_r2;
-        co_await _msg_::readMsg(socket, rcvBuff, &nbRcved, &msg_r2);
-        std::cout <<"启动2..............."<< std::endl;
+        co_await _msg_::readMsg(socket, rcvBuff, &nbRcved, &msg_r);
         switch(msg_r.type)
         {
         case msgType::ReqProxy :
