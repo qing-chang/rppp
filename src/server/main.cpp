@@ -7,18 +7,48 @@
 #include "control.h"
 
 Channel<int> channel;
-std::vector<Control> controlRegistry;
+std::vector<std::shared_ptr<Control>> controlRegistry;
 Config<confServer> config;
 IOContext io_context;
 
-std::task<> controlListener(std::shared_ptr<Socket> listener)
+std::task<> controlProxyListener(std::shared_ptr<Socket> listener)
 {
     while (true)
     {
-        Control *c = new Control;
-        c->socket = co_await listener->accept();
-        c->controlCoRoutine().resume();
-        controlRegistry.push_back(*c);
+        std::shared_ptr<Socket> socket = co_await listener->accept();
+        char rcvBuff[RCV_BUFF_SIZE];
+        ssize_t nbRcved = 0;
+        Msg msg;
+        co_await _msg_::readMsg(socket, rcvBuff, &nbRcved, &msg);
+        switch(msg.type)
+        {
+        case msgType::Auth :
+            {
+                std::shared_ptr<Control> control = std::shared_ptr<Control>(new Control);
+                control->auth_ = *(std::static_pointer_cast<auth>(msg.msg_));
+                auto got = (config.conf)->user.find(control->auth_.user);
+                if ((got != (config.conf)->user.end()) && (got->second == control->auth_.password))
+                {
+                    //认证成功
+                    std::cout <<"认证成功"<< std::endl;
+                    control->socket = socket;
+                    controlRegistry.push_back(control);
+                    control->initControl().resume();
+                } else
+                {
+                    //认证失败
+                    std::cout <<"认证失败"<< std::endl;
+                    co_return;
+                }
+                break;
+            }
+        case msgType::RegProxy :
+            {
+                break;
+            }
+        default:
+            break;
+        }
     }
 }
 
@@ -43,6 +73,6 @@ int main()
 	//开始监听端口，等待客户端链入
     io_context.init();
     std::shared_ptr<Socket> listener = std::shared_ptr<Socket>(new Socket{io_context, config.conf->bindPort});
-    controlListener(listener).resume();
+    controlProxyListener(listener).resume();
     io_context.run();
 }

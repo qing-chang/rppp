@@ -91,41 +91,6 @@ std::task<> Control::stopper()
     std::cout <<"启动stopper"<< std::endl;
 }
 
-std::task<> Control::controlCoRoutine()
-{
-    char rcvBuff[RCV_BUFF_SIZE];
-    ssize_t nbRcved = 0;
-    Msg msg;
-    co_await _msg_::readMsg(socket, rcvBuff, &nbRcved, &msg);
-    switch(msg.type)
-    {
-    case msgType::Auth :
-        {
-            auth_ = *(std::static_pointer_cast<auth>(msg.msg_));
-            auto got = (config.conf)->user.find(auth_.user);
-            if ((got != (config.conf)->user.end()) && (got->second == auth_.password))
-            {
-                //认证成功
-                std::cout <<"认证成功"<< std::endl;
-                initControl().resume();
-            } else
-            {
-                //认证失败
-                std::cout <<"认证失败"<< std::endl;
-                close();
-                co_return;
-            }
-            break;
-        }
-    case msgType::RegProxy :
-        {
-            break;
-        }
-    default:
-        close();
-        break;
-    }
-}
 
 void Control::close()
 {

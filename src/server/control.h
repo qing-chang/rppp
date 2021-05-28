@@ -9,7 +9,7 @@
 
 class Tunnel;
 
-class Control //: public Msg
+class Control
 {
 public:
     std::shared_ptr<Socket> socket;
