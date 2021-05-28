@@ -8,12 +8,12 @@ namespace _msg_
         msgHdr *h = (msgHdr *)rcvBuff;
         while((*nbRcved) < 4)
         {
-            res = co_await socket->recv(rcvBuff, RCV_BUFF_SIZE - (*nbRcved));
+            res = co_await socket->recv(rcvBuff + (*nbRcved), RCV_BUFF_SIZE - (*nbRcved));
             (*nbRcved) += res;
         }
         while((*nbRcved) < h->len)
         {
-            res = co_await socket->recv(rcvBuff, RCV_BUFF_SIZE - (*nbRcved));
+            res = co_await socket->recv(rcvBuff + (*nbRcved), RCV_BUFF_SIZE - (*nbRcved));
             (*nbRcved) += res;
         }
         pmsg->type = (msgType)(h->type);
@@ -42,6 +42,12 @@ namespace _msg_
                                         rcvBuff + 4,
                                         h->len - 4);
             break;
+        case msgType::ReqProxy :
+            pmsg->msg_ = std::shared_ptr<reqProxy>(new reqProxy);
+            iguana::json::from_json0(*(std::static_pointer_cast<reqProxy>(pmsg->msg_)),
+                                        rcvBuff + 4,
+                                        h->len - 4);
+            break;
         case msgType::RegProxy :
             pmsg->msg_ = std::shared_ptr<regProxy>(new regProxy);
             iguana::json::from_json0(*(std::static_pointer_cast<regProxy>(pmsg->msg_)),
@@ -49,18 +55,18 @@ namespace _msg_
                                         h->len - 4);
             break;
         }
-        if((*nbRcved) != 0)
-        {
+        // if((*nbRcved) != 0)
+        // {
             ssize_t len_ = h->len;
             if((*nbRcved) > len_)
             {
-                *nbRcved -= len_;
                 memcpy(rcvBuff, rcvBuff + len_, (*nbRcved) - len_);
+                *nbRcved -= len_;
             } else
             {
                 *nbRcved = 0;
             }
-        }
+        // }
     }
 
     std::task<> writeMsg(std::shared_ptr<Socket> socket, char *sndBuff, Msg *pmsg)
@@ -90,13 +96,13 @@ namespace _msg_
         }
         auto json_str = ss.str();
         json_str.copy(sndBuff + 4, json_str.length(), 0);
-        ssize_t nbSend = json_str.length() + 4;
+        ssize_t len = json_str.length() + 4;
         msgHdr *h = (msgHdr *)sndBuff;
-        *h = {pmsg->type, (uint16_t)(nbSend)};
+        *h = {pmsg->type, (uint16_t)(len)};
         ssize_t nbSended = 0;
-        while (nbSended < nbSend)
+        while (nbSended < len)
         {
-            ssize_t res = co_await socket->send(sndBuff + nbSended, nbSend - nbSended);
+            ssize_t res = co_await socket->send(sndBuff + nbSended, len - nbSended);
             if (res <= 0)
                 break;
             nbSended += res;

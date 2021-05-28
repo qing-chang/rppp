@@ -10,4 +10,5 @@ public:
     std::shared_ptr<Socket> socket;
     void Run();
     std::task<> control();
+    std::task<> heartbeat();
 };

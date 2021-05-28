@@ -33,9 +33,9 @@ REFLECTION(auth, user, password)
 
 struct authResp
 {
-	std::string clientId;
+	std::string controlId;
 };
-REFLECTION(authResp, clientId)
+REFLECTION(authResp, controlId)
 
 struct reqTunnel
 {
@@ -47,21 +47,21 @@ REFLECTION(reqTunnel, type, name, remotePort)
 
 struct newTunnel
 {
-	std::string tunnelId;
+	std::string remotePort;
 };
-REFLECTION(newTunnel, tunnelId)
+REFLECTION(newTunnel, remotePort)
 
 struct reqProxy
 {
-    std::string clientId_;
+    std::string remotePort;
 };
-REFLECTION(reqProxy, clientId_)
+REFLECTION(reqProxy, remotePort)
 
 struct regProxy
 {
-    std::string clientId__;
+    std::string remotePort;
 };
-REFLECTION(regProxy, clientId__)
+REFLECTION(regProxy, remotePort)
 
 struct startProxy
 {
