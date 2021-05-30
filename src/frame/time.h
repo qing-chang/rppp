@@ -3,6 +3,7 @@
 #include <coroutine>
 #include <time.h>
 #include "task.h"
+// #include "../client/model.h"
 
 struct timerNode
 {
@@ -14,5 +15,5 @@ struct timerNode
 
 using callbBack = std::task<> (*)(timerNode *tn);
 
-timerNode *addTimer(int duration, callbBack cb);
+timerNode *addTimer(int duration, callbBack cb);//, ClientModel *cm);
 int delTimer(timerNode *tn);

@@ -2,7 +2,7 @@
 
 timerNode *timers;
 
-timerNode *addTimer(int duration, callbBack cb)
+timerNode *addTimer(int duration, callbBack cb)//, ClientModel *cm)
 {
     timerNode *tn = new timerNode;
     tn->time = clock() + duration;
@@ -17,7 +17,7 @@ timerNode *addTimer(int duration, callbBack cb)
     }else{
         timers = tn;
     }
-    auto h = cb(tn);
+    auto h = cb(tn);//, cm);
     tn->h = h.handle_;
     // h.resume();
 }

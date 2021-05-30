@@ -3,6 +3,7 @@
 #include "../frame/io_context.h"
 #include "../socket/socket.h"
 #include "../conf/conf.h"
+#include "../frame/time.h"
 
 class ClientModel
 {
@@ -11,7 +12,7 @@ public:
     void Run();
     std::task<> control();
 };
-    std::task<> heartbeat(timerNode *tn);
+    std::task<> heartbeat(timerNode *tn);//, ClientModel *cm);
 
 struct timerTick
 {
