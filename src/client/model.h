@@ -10,5 +10,19 @@ public:
     std::shared_ptr<Socket> socket;
     void Run();
     std::task<> control();
-    std::task<> heartbeat();
+};
+    std::task<> heartbeat(timerNode *tn);
+
+struct timerTick
+{
+    timerTick(timerNode *tn):tn(tn){}
+    bool await_ready() const noexcept { return false; }
+    void await_suspend(std::coroutine_handle<> h)
+    {
+        if (clock() > tn->time)
+            h.resume();
+    }
+    void await_resume()
+    {}
+    timerNode *tn;
 };

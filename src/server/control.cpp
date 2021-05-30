@@ -2,6 +2,11 @@
 
 extern Config<confServer> config;
 
+inline std::string genRandomId()
+{
+    return std::string{"123456"};
+}
+
 std::task<> Control::initControl()
 {
     std::cout <<"initControl.............."<< std::endl;
@@ -11,7 +16,8 @@ std::task<> Control::initControl()
     char sndBuff[SND_BUFF_SIZE];
     Msg msg;
     msg.type = msgType::AuthResp;
-    std::shared_ptr<authResp> authResp_(new authResp{"xxx--authResp--xxx"});
+    id = genRandomId();
+    std::shared_ptr<authResp> authResp_(new authResp{id});
     msg.msg_ = std::static_pointer_cast<void>(authResp_);
     co_await out.write(msg);
     //----------------发送ReqProxy----------------------
@@ -90,7 +96,6 @@ std::task<> Control::stopper()
 {
     std::cout <<"启动stopper"<< std::endl;
 }
-
 
 void Control::close()
 {

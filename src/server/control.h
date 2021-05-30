@@ -8,14 +8,17 @@
 #include "../conf/conf.h"
 
 class Tunnel;
+class Proxy;
 
 class Control
 {
 public:
+    std::string id;
     std::shared_ptr<Socket> socket;
     Channel<Msg> in, out;
     auth auth_;
     std::vector<std::shared_ptr<Tunnel>> tunnels;
+    std::vector<std::shared_ptr<Proxy>> proxy_bak;
 
     Control(){}
     std::task<> initControl();

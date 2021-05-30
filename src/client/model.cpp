@@ -1,9 +1,11 @@
 #include "model.h"
 #include "../msg/msg.h"
+#include "../frame/time.h"
 #include <iostream>
 
 extern Config<confClient> config;
 extern IOContext io_context;
+extern timerNode *timers;
 
 void ClientModel::Run()
 {
@@ -52,7 +54,8 @@ std::task<> ClientModel::control()
         co_await _msg_::writeMsg(socket, sndBuff, &msg_s);
     }
     //---------------------------------------启动heartbeat-----------------------------------------------------
-    // heartbeat().resume();
+    timerNode *tn = addTimer(60*1000*5, heartbeat);
+    // heartbeat(tn).resume();
     //---------------------------------------主循环-------------------------------------------------------
     while(true)
     {
@@ -87,7 +90,10 @@ std::task<> ClientModel::control()
     }
 }
 
-std::task<> ClientModel::heartbeat()
+std::task<> heartbeat(timerNode *tn)
 {
-
+    co_await timerTick(tn);
+    Msg msg_p;
+    msg_p.type = msgType::Ping;
+    // co_await _msg_::writeMsg(socket, sndBuff, &msg_p);
 }

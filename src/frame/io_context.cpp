@@ -2,18 +2,36 @@
 #include <stdexcept>
 #include "../socket/socket.h"
 
+extern timerNode *timers;
+
 void IOContext::init()
 {
     efd = epoll_create1(0);
     if (efd == -1)
         throw std::runtime_error{"epoll_create1"};
 }
+
+void IOContext::expireTimer()
+{
+    timerNode *ctn = timers;
+    while(clock() > ctn->time)
+    {
+        ctn->h.resume();
+        ctn = ctn->next;
+        if(!ctn)
+            break;
+    }
+}
+
 void IOContext::run()
 {
     struct epoll_event ev, events[max_events];
     for (;;)
     {
-        auto nfds = epoll_wait(efd, events, max_events, -1);
+        expireTimer();
+        clock_t tv= timers?timers->time - clock():-1;
+        auto nfds = epoll_wait(efd, events, max_events, tv);
+        expireTimer();
         if (nfds == -1)
             throw std::runtime_error{"epoll_wait"};
 

@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <sys/epoll.h>
 
+#include "time.h"
 #include "../socket/socket_accept_operation.h"
 #include "../socket/socket_connect_operation.h"
 #include "../socket/socket_recv_operation.h"
@@ -17,6 +18,7 @@ class IOContext
 public:
     IOContext(){}
     void init();
+    void expireTimer();
     void run();
 private:
     constexpr static std::size_t max_events = 10;
