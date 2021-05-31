@@ -75,8 +75,7 @@ std::task<> Control::manager()
             {
                 std::cout <<"收到ReqTunnel"<< std::endl;
                 std::shared_ptr<Tunnel> tunnel = std::shared_ptr<Tunnel>(new Tunnel{this});
-                std::shared_ptr<reqTunnel> reqTunnel_ = std::static_pointer_cast<reqTunnel>(msg.msg_);
-                tunnel->remotePort = reqTunnel_->remotePort;
+                tunnel->remotePort = std::static_pointer_cast<reqTunnel>(msg.msg_)->remotePort;
                 tunnel->NewTunnel().resume();
                 tunnels.push_back(tunnel);
                 break;
@@ -84,6 +83,7 @@ std::task<> Control::manager()
         case msgType::Ping :
             {
                 std::cout <<"收到Ping"<< std::endl;
+                lastPing = clock();
                 msg.type = msgType::Pong;
                 co_await out.write(msg);
                 break;

@@ -37,6 +37,7 @@ namespace _msg_
             json::from_json0(*(std::static_pointer_cast<reqTunnel>(pmsg->msg_)), 
                                         rcvBuff + 4,
                                         h->len - 4);
+            break;
         case  msgType::NewTunnel :
             pmsg->msg_ = std::shared_ptr<newTunnel>(new newTunnel);
             json::from_json0(*(std::static_pointer_cast<newTunnel>(pmsg->msg_)), 
