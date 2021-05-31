@@ -13,7 +13,4 @@ struct timerNode
     std::coroutine_handle<> h;
 };
 
-using callbBack = std::task<> (*)(timerNode *tn);
-
-timerNode *addTimer(int duration, callbBack cb);//, ClientModel *cm);
 int delTimer(timerNode *tn);

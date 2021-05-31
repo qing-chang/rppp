@@ -2,7 +2,7 @@
 #include <stdexcept>
 #include "../socket/socket.h"
 
-extern timerNode *timers;
+timerNode *timers;
 
 void IOContext::init()
 {
@@ -14,12 +14,10 @@ void IOContext::init()
 void IOContext::expireTimer()
 {
     timerNode *ctn = timers;
-    while(clock() > ctn->time)
+    while(ctn && clock() > ctn->time)
     {
         ctn->h.resume();
         ctn = ctn->next;
-        if(!ctn)
-            break;
     }
 }
 
