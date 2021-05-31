@@ -5,14 +5,19 @@
 #include "../conf/conf.h"
 #include "../frame/time.h"
 
+class ClientModel;
+
+typedef std::task<> (ClientModel::*callbBack)(timerNode *);
+
 class ClientModel
 {
 public:
     std::shared_ptr<Socket> socket;
     void Run();
     std::task<> control();
+    timerNode *addTimer(int duration, callbBack cb);
+    std::task<> heartbeat(timerNode *tn);
 };
-    std::task<> heartbeat(timerNode *tn);//, ClientModel *cm);
 
 struct timerTick
 {

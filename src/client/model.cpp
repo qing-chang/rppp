@@ -53,8 +53,7 @@ std::task<> ClientModel::control()
         co_await _msg_::writeMsg(socket, sndBuff, &msg_s);
     }
     //---------------------------------------启动heartbeat-----------------------------------------------------
-    timerNode *tn = addTimer(60*1000*5, heartbeat);//, this);
-    // heartbeat(tn).resume();
+    timerNode *tn = addTimer(60*1000*5, &ClientModel::heartbeat);
     //---------------------------------------主循环-------------------------------------------------------
     while(true)
     {
@@ -89,11 +88,31 @@ std::task<> ClientModel::control()
     }
 }
 
-std::task<> heartbeat(timerNode *tn)//, ClientModel *cm)
+timerNode *ClientModel::addTimer(int duration, callbBack cb)
+{
+    timerNode *tn = new timerNode;
+    tn->time = clock() + duration;
+    if(timers)
+    {
+        timerNode *ctn = timers;
+        while(tn->time > ctn->time)
+        {
+            ctn = ctn->next;
+        }
+            
+    }else{
+        timers = tn;
+    }
+    auto h = (this->*cb)(tn);
+    tn->h = h.handle_;
+    // h.resume();
+}
+
+std::task<> ClientModel::heartbeat(timerNode *tn)
 {
     co_await timerTick(tn);
     char sndBuff[SND_BUFF_SIZE];
     Msg msg_p;
     msg_p.type = msgType::Ping;
-    // co_await _msg_::writeMsg(cm->socket, sndBuff, &msg_p);
+    // co_await _msg_::writeMsg(socket, sndBuff, &msg_p);
 }
