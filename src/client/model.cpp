@@ -64,7 +64,9 @@ std::task<> ClientModel::control()
             {
                 std::cout <<"收到ReqProxy"<< std::endl;
                 std::shared_ptr<reqProxy> reqProxy_ = std::static_pointer_cast<reqProxy>(msg_r.msg_);
-
+                std::shared_ptr<Proxy> proxy(new Proxy(this));
+                proxy->NewProxy().resume();
+                proxys.push_back(proxy);
                 break;
             }
         case msgType::Pong :
@@ -76,7 +78,9 @@ std::task<> ClientModel::control()
         case msgType::NewTunnel :
             {
                 std::cout <<"收到NewTunnel"<< std::endl;
-
+                std::shared_ptr<Tunnel> tunnel(new Tunnel(this));
+                tunnel->remotePort = std::static_pointer_cast<newTunnel>(msg_r.msg_)->remotePort;
+                // tunnel->NewTunnel();
                 break;
             }
         default :

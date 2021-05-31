@@ -4,8 +4,11 @@
 #include "../socket/socket.h"
 #include "../conf/conf.h"
 #include "../frame/time.h"
+#include "tunnel.h"
 
 class ClientModel;
+class Tunnel;
+class Proxy;
 
 typedef std::task<> (ClientModel::*callbBack)(timerNode *);
 
@@ -13,6 +16,9 @@ class ClientModel
 {
 public:
     std::shared_ptr<Socket> socket;
+    std::vector<std::shared_ptr<Tunnel>> tunnels;
+    std::vector<std::shared_ptr<Proxy>> proxys;
+
     void Run();
     std::task<> control();
     timerNode *addTimer(int duration, callbBack cb);

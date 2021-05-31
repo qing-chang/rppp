@@ -22,7 +22,7 @@ std::task<> Control::initControl()
     co_await out.write(msg);
     //----------------发送ReqProxy----------------------
     msg.type = msgType::ReqProxy;
-    std::shared_ptr<reqProxy> reqProxy_(new reqProxy{"xxx--reqProxy--xxx"});
+    std::shared_ptr<reqProxy> reqProxy_(new reqProxy{id});
     msg.msg_ = std::static_pointer_cast<void>(reqProxy_);
     co_await out.write(msg);
     //---------------------------------------
@@ -74,7 +74,7 @@ std::task<> Control::manager()
         case msgType::ReqTunnel :
             {
                 std::cout <<"收到ReqTunnel"<< std::endl;
-                std::shared_ptr<Tunnel> tunnel = std::shared_ptr<Tunnel>(new Tunnel{this});
+                std::shared_ptr<Tunnel> tunnel(new Tunnel{this});
                 tunnel->remotePort = std::static_pointer_cast<reqTunnel>(msg.msg_)->remotePort;
                 tunnel->NewTunnel().resume();
                 tunnels.push_back(tunnel);

@@ -47,19 +47,19 @@ REFLECTION(reqTunnel, type, name, remotePort)
 
 struct newTunnel
 {
-	std::string remotePort;
+	int remotePort;
 };
 REFLECTION(newTunnel, remotePort)
 
 struct reqProxy
 {
-    std::string remotePort;
+	std::string controlId;
 };
-REFLECTION(reqProxy, remotePort)
+REFLECTION(reqProxy, controlId)
 
 struct regProxy
 {
-    std::string remotePort;
+    int remotePort;
 };
 REFLECTION(regProxy, remotePort)
 
