@@ -12,5 +12,3 @@ struct timerNode
     clock_t time;
     std::coroutine_handle<> h;
 };
-
-int delTimer(timerNode *tn);

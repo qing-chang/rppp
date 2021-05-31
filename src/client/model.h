@@ -16,6 +16,7 @@ public:
     void Run();
     std::task<> control();
     timerNode *addTimer(int duration, callbBack cb);
+    int delTimer(timerNode *tn);
     std::task<> heartbeat(timerNode *tn);
 };
 
