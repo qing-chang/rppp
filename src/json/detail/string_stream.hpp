@@ -1,6 +1,6 @@
 #pragma once
 
-namespace iguana
+namespace json
 {
 	template <typename alloc_ty>
 	struct basic_string_stream

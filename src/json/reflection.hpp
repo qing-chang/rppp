@@ -16,7 +16,7 @@
 #include "detail/traits.hpp"
 #include "detail/string_stream.hpp"
 
-namespace iguana::detail {
+namespace json::detail {
 /******************************************/
 /* arg list expand macro, now support 120 args */
 #define MAKE_ARG_LIST_1(op, arg, ...)   op(arg)
@@ -313,7 +313,7 @@ namespace iguana::detail {
     MACRO_CONCAT(CON_STR, GET_ARG_COUNT(__VA_ARGS__))(__VA_ARGS__)
 
 #define MAKE_META_DATA_IMPL(STRUCT_NAME, ...) \
-static auto iguana_reflect_members(STRUCT_NAME const&) \
+static auto json_reflect_members(STRUCT_NAME const&) \
 { \
     struct reflect_members \
     { \
@@ -335,13 +335,13 @@ static auto iguana_reflect_members(STRUCT_NAME const&) \
 
 }
 
-namespace iguana
+namespace json
 {
 #define REFLECTION(STRUCT_NAME, ...) \
 MAKE_META_DATA(STRUCT_NAME, GET_ARG_COUNT(__VA_ARGS__), __VA_ARGS__)
 
     template<typename T>
-    using Reflect_members = decltype(iguana_reflect_members(std::declval<T>()));
+    using Reflect_members = decltype(json_reflect_members(std::declval<T>()));
 
     template <typename T, typename = void>
     struct is_reflection : std::false_type
@@ -359,7 +359,7 @@ MAKE_META_DATA(STRUCT_NAME, GET_ARG_COUNT(__VA_ARGS__), __VA_ARGS__)
     template<size_t I, typename T>
     constexpr decltype(auto) get(T&& t)
     {
-        using M = decltype(iguana_reflect_members(std::forward<T>(t)));
+        using M = decltype(json_reflect_members(std::forward<T>(t)));
 		using U = decltype(std::forward<T>(t).*(std::get<I>(M::apply_impl())));
 		
 		if constexpr(std::is_array_v<U>) {
@@ -387,21 +387,21 @@ MAKE_META_DATA(STRUCT_NAME, GET_ARG_COUNT(__VA_ARGS__), __VA_ARGS__)
     template <typename T>
     constexpr auto get(T const& t)
     {
-        using M = decltype(iguana_reflect_members(t));
+        using M = decltype(json_reflect_members(t));
         return get_impl(t, std::make_index_sequence<M::value()>{});
     }
 
     template <typename T>
     constexpr auto get_ref(T& t)
     {
-        using M = decltype(iguana_reflect_members(t));
+        using M = decltype(json_reflect_members(t));
         return get_impl(t, std::make_index_sequence<M::value()>{});
     }
 
     template<typename T, size_t  I>
     constexpr const std::string_view get_name()
     {
-        using M = decltype(iguana_reflect_members(std::declval<T>()));
+        using M = decltype(json_reflect_members(std::declval<T>()));
         static_assert(I<M::value(), "out of range");
         return M::arr()[I];
     }
@@ -409,7 +409,7 @@ MAKE_META_DATA(STRUCT_NAME, GET_ARG_COUNT(__VA_ARGS__), __VA_ARGS__)
     template<typename T>
     constexpr const std::string_view get_name(size_t i)
     {
-        using M = decltype(iguana_reflect_members(std::declval<T>()));
+        using M = decltype(json_reflect_members(std::declval<T>()));
 //		static_assert(I<M::value(), "out of range");
         return M::arr()[i];
     }
@@ -417,14 +417,14 @@ MAKE_META_DATA(STRUCT_NAME, GET_ARG_COUNT(__VA_ARGS__), __VA_ARGS__)
     template<typename T>
     constexpr const std::string_view get_name()
     {
-        using M = decltype(iguana_reflect_members(std::declval<T>()));
+        using M = decltype(json_reflect_members(std::declval<T>()));
         return M::name();
     }
 
     template<typename T>
     constexpr std::enable_if_t<is_reflection<T>::value, size_t> get_value()
     {
-        using M = decltype(iguana_reflect_members(std::declval<T>()));
+        using M = decltype(json_reflect_members(std::declval<T>()));
         return M::value();
     }
 
@@ -437,14 +437,14 @@ MAKE_META_DATA(STRUCT_NAME, GET_ARG_COUNT(__VA_ARGS__), __VA_ARGS__)
     template<typename T>
     constexpr auto get_array()
     {
-        using M = decltype(iguana_reflect_members(std::declval<T>()));
+        using M = decltype(json_reflect_members(std::declval<T>()));
         return M::arr();
     }
 
     template<typename T>
     constexpr auto get_index(std::string_view name)
     {
-        using M = decltype(iguana_reflect_members(std::declval<T>()));
+        using M = decltype(json_reflect_members(std::declval<T>()));
         constexpr auto arr = M::arr();
 
         auto it = std::find_if(arr.begin(), arr.end(), [name](auto str){
@@ -475,14 +475,14 @@ MAKE_META_DATA(STRUCT_NAME, GET_ARG_COUNT(__VA_ARGS__), __VA_ARGS__)
     template<typename T, typename F>
     constexpr std::enable_if_t<is_reflection<T>::value> for_each(T&& t, F&& f)
     {
-        using M = decltype(iguana_reflect_members(std::forward<T>(t)));
+        using M = decltype(json_reflect_members(std::forward<T>(t)));
         for_each(M::apply_impl(), std::forward<F>(f), std::make_index_sequence<M::value()>{});
     }
 
 	template<typename T, typename F>
 	constexpr std::enable_if_t<is_tuple<std::decay_t<T>>::value> for_each(T&& t, F&& f)
 	{
-		//using M = decltype(iguana_reflect_members(std::forward<T>(t)));
+		//using M = decltype(json_reflect_members(std::forward<T>(t)));
 		constexpr const size_t SIZE = std::tuple_size_v<std::decay_t<T>>;
 		for_each(std::forward<T>(t), std::forward<F>(f), std::make_index_sequence<SIZE>{});
 	}

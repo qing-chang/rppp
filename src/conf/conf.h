@@ -67,6 +67,6 @@ bool Config<T>::Load(const char *pconfName)
     }
     fclose(fp);
     fp = nullptr;
-    iguana::json::from_json0(*conf, confStr.data(), confStr.length());
+    json::from_json0(*conf, confStr.data(), confStr.length());
     return true;
 }

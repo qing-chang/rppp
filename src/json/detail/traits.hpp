@@ -7,7 +7,8 @@
 #include <deque>
 #include <queue>
 #include <list>
-namespace iguana
+
+namespace json
 {
     template< class T >
     struct is_signed_intergral_like : std::integral_constant < bool,
