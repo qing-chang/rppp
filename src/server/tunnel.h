@@ -19,6 +19,7 @@ public:
     std::shared_ptr<Socket> socketUp;
     std::shared_ptr<Control> control;
     std::shared_ptr<Tunnel>  tunnel;
+    std::task<> forward(std::shared_ptr<Socket> socketIn, std::shared_ptr<Socket> socketOut);
 };
 
 class Tunnel

@@ -25,11 +25,11 @@ public:
 
     Control(){}
     std::task<> initControl();
-    void registerTunnel();
+    // void registerTunnel();
     std::task<> writer();
     std::task<> reader();
     std::task<> manager();
     std::task<> stopper();
-    std::task<> controlCoRoutine();
+    // std::task<> controlCoRoutine();
     void close();
 };
