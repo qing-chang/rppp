@@ -4,7 +4,7 @@
 #include "../socket/socket.h"
 #include "../conf/conf.h"
 #include "../frame/time.h"
-#include "tunnel.h"
+#include "tunnelClient.h"
 
 class ClientModel;
 class Tunnel;
