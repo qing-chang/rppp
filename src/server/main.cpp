@@ -24,7 +24,7 @@ std::task<> controlProxyListener(std::shared_ptr<Socket> listener)
         {
         case msgType::Auth :
             {
-                std::shared_ptr<Control> control = std::shared_ptr<Control>(new Control);
+                std::shared_ptr<Control> control(new Control);
                 control->auth_ = *(std::static_pointer_cast<auth>(msg.msg_));
                 auto got = (config.conf)->user.find(control->auth_.user);
                 if ((got != (config.conf)->user.end()) && (got->second == control->auth_.password))
@@ -44,6 +44,7 @@ std::task<> controlProxyListener(std::shared_ptr<Socket> listener)
             }
         case msgType::RegProxy :
             {
+
                 break;
             }
         default:

@@ -14,7 +14,7 @@ class Control;
 class Proxy
 {
 public:
-    std::shared_ptr<Socket> socketIn;
+    std::shared_ptr<Socket> socketDown;
 };
 
 class Tunnel

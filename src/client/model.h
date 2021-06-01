@@ -15,6 +15,7 @@ typedef std::task<> (ClientModel::*callbBack)(timerNode *);
 class ClientModel
 {
 public:
+    std::string id;
     std::shared_ptr<Socket> socket;
     std::vector<std::shared_ptr<Tunnel>> tunnels;
     std::vector<std::shared_ptr<Proxy>> proxys;

@@ -21,7 +21,7 @@ std::task<> Tunnel::tunnelListener()
     while (true)
     {
         std::shared_ptr<Proxy> proxy = std::shared_ptr<Proxy>(new Proxy);
-        proxy->socketIn = co_await tunnelListener_->accept();
+        proxy->socketDown = co_await tunnelListener_->accept();
         // proxy->controlCoRoutine().resume();
         proxys.push_back(proxy);
     }

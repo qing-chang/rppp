@@ -59,15 +59,15 @@ REFLECTION(reqProxy, controlId)
 
 struct regProxy
 {
-    int remotePort;
+    std::string controlId;
 };
-REFLECTION(regProxy, remotePort)
+REFLECTION(regProxy, controlId)
 
 struct startProxy
 {
-	std::string clientAddr;
+	int remotePort;
 };
-REFLECTION(startProxy, clientAddr)
+REFLECTION(startProxy, remotePort)
 
 struct Msg
 {

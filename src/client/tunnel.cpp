@@ -5,9 +5,9 @@ extern IOContext io_context;
 
 std::task<> Proxy::NewProxy()
 {
-    //------------------------------发送到中转服务器的链接----------------------------------------------------
-    socketIn = std::shared_ptr<Socket>(new Socket{io_context, 0});
-    int c = co_await socketIn->connect(config.conf->serverAddr, config.conf->serverPort);
+    //------------------------------发起到中转服务器的链接----------------------------------------------------
+    socketDown = std::shared_ptr<Socket>(new Socket{io_context, 0});
+    int c = co_await socketDown->connect(config.conf->serverAddr, config.conf->serverPort);
     if(c != 0)
     {
         std::cout << "connect fail" << std::endl;
@@ -16,24 +16,48 @@ std::task<> Proxy::NewProxy()
         std::cout << "connect succeed" << std::endl;
     }
     //------------------------------发送RegProxy----------------------------------------------------
-
+    char sndBuff[SND_BUFF_SIZE];
+    Msg msg;
+    msg.type = msgType::RegProxy;
+    std::shared_ptr<regProxy> regProxy_(new regProxy{clientModel->id});
+    msg.msg_ = std::static_pointer_cast<void>(regProxy_);
+    co_await _msg_::writeMsg(socketDown, sndBuff, &msg);
     //------------------------------接收startProxy----------------------------------------------------
-
-    //------------------------------发送到内容服务器的链接----------------------------------------------------
-    
+    char rcvBuff[SND_BUFF_SIZE];
+    ssize_t nbRcved = 0;
+    while(true)
+    {
+        co_await _msg_::readMsg(socketDown, rcvBuff, &nbRcved, &msg);
+        if(msg.type == msgType::StartProxy)
+        {
+            std::cout << "startProxy........." << std::endl;
+            // id = std::static_pointer_cast<authResp>(msg_r.msg_)->controlId;
+            break;
+        }
+    }
+    //------------------------------发起到内容服务器的链接----------------------------------------------------
+    // sockeUp = std::shared_ptr<Socket>(new Socket{io_context, 0});
+    // int c = co_await sockeUp->connect(config.conf->serverAddr, config.conf->serverPort);
+    // if(c != 0)
+    // {
+    //     std::cout << "connect fail" << std::endl;
+    // }else
+    // {
+    //     std::cout << "connect succeed" << std::endl;
+    // }
     //------------------------------中转信息---------------------------------------------------------
 
 }
 
-std::task<> Tunnel::NewTunnel()
+void Tunnel::NewTunnel()
 {
-    // //------------------------------发送NewTunnel---------------------------------------------------------
-    // char sndBuff[SND_BUFF_SIZE];
-    // Msg msg;
-    // msg.type = msgType::NewTunnel;
-    // std::shared_ptr<newTunnel> newTunnel_(new newTunnel{std::to_string(remotePort)});
-    // msg.msg_ = std::static_pointer_cast<void>(newTunnel_);
-    // co_await _msg_::writeMsg(control->socket, sndBuff, &msg);
-    // //------------------------------开始监听用户链接-------------------------------------------------------
-    // tunnelListener().resume();
+    for(auto t:(config.conf)->tunnel)
+    {
+        if(t.remotePort == remotePort)
+        {
+            localAddr = t.localAddr;
+            localPort = t.localPort;
+            break;
+        }
+    }
 }

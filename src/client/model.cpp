@@ -40,6 +40,7 @@ std::task<> ClientModel::control()
         if(msg_r.type == msgType::AuthResp)
         {
             std::cout << "认证成功........." << std::endl;
+            id = std::static_pointer_cast<authResp>(msg_r.msg_)->controlId;
             break;
         }
     }
@@ -80,7 +81,7 @@ std::task<> ClientModel::control()
                 std::cout <<"收到NewTunnel"<< std::endl;
                 std::shared_ptr<Tunnel> tunnel(new Tunnel(this));
                 tunnel->remotePort = std::static_pointer_cast<newTunnel>(msg_r.msg_)->remotePort;
-                // tunnel->NewTunnel();
+                tunnel->NewTunnel();
                 break;
             }
         default :

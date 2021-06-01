@@ -14,8 +14,8 @@ class ClientModel;
 class Proxy
 {
 public:
-    std::shared_ptr<Socket> socketIn;
-    std::shared_ptr<Socket> socketOut;
+    std::shared_ptr<Socket> socketDown;
+    std::shared_ptr<Socket> socketUp;
     ClientModel *clientModel;
 
     Proxy(ClientModel *clientModel):clientModel(clientModel){}
@@ -26,11 +26,11 @@ class Tunnel
 {
 public:
     int remotePort;
+    std::string localAddr;
+	int localPort;
     ClientModel *clientModel;
-    // std::shared_ptr<Socket> tunnelListener_;
     std::vector<std::shared_ptr<Proxy>> proxys;
 
     Tunnel(ClientModel *clientModel):clientModel(clientModel){}
-    std::task<> NewTunnel();
-    // std::task<> tunnelListener();
+    void NewTunnel();
 };
