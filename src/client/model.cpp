@@ -82,6 +82,7 @@ std::task<> ClientModel::control()
                 std::shared_ptr<Tunnel> tunnel(new Tunnel(this));
                 tunnel->remotePort = std::static_pointer_cast<newTunnel>(msg_r.msg_)->remotePort;
                 tunnel->NewTunnel();
+                tunnels.push_back(tunnel);
                 break;
             }
         default :
