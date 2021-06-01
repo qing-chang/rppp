@@ -3,6 +3,7 @@
 #include <vector>
 #include "../channel/channel.h"
 #include "tunnel.h"
+#include "proxy.h"
 #include "../socket/socket.h"
 #include "../msg/msg.h"
 #include "../conf/conf.h"
