@@ -23,38 +23,44 @@ namespace _msg_
         case  msgType::Auth :
             pmsg->msg_ = std::shared_ptr<auth>(new auth);
             json::from_json0(*(std::static_pointer_cast<auth>(pmsg->msg_)), 
-                                        rcvBuff + 4,
-                                        h->len - 4);
+                                rcvBuff + 4,
+                                h->len - 4);
             break;
         case  msgType::AuthResp :
             pmsg->msg_ = std::shared_ptr<authResp>(new authResp);
             json::from_json0(*(std::static_pointer_cast<authResp>(pmsg->msg_)), 
-                                        rcvBuff + 4,
-                                        h->len - 4);
+                                rcvBuff + 4,
+                                h->len - 4);
             break;
         case  msgType::ReqTunnel :
             pmsg->msg_ = std::shared_ptr<reqTunnel>(new reqTunnel);
             json::from_json0(*(std::static_pointer_cast<reqTunnel>(pmsg->msg_)), 
-                                        rcvBuff + 4,
-                                        h->len - 4);
+                                rcvBuff + 4,
+                                h->len - 4);
             break;
         case  msgType::NewTunnel :
             pmsg->msg_ = std::shared_ptr<newTunnel>(new newTunnel);
             json::from_json0(*(std::static_pointer_cast<newTunnel>(pmsg->msg_)), 
-                                        rcvBuff + 4,
-                                        h->len - 4);
+                                rcvBuff + 4,
+                                h->len - 4);
             break;
         case msgType::ReqProxy :
             pmsg->msg_ = std::shared_ptr<reqProxy>(new reqProxy);
             json::from_json0(*(std::static_pointer_cast<reqProxy>(pmsg->msg_)),
-                                        rcvBuff + 4,
-                                        h->len - 4);
+                                rcvBuff + 4,
+                                h->len - 4);
             break;
         case msgType::RegProxy :
             pmsg->msg_ = std::shared_ptr<regProxy>(new regProxy);
             json::from_json0(*(std::static_pointer_cast<regProxy>(pmsg->msg_)),
-                                        rcvBuff + 4,
-                                        h->len - 4);
+                                rcvBuff + 4,
+                                h->len - 4);
+            break;
+        case msgType::StartProxy :
+            pmsg->msg_ = std::shared_ptr<startProxy>(new startProxy);
+            json::from_json0(*(std::static_pointer_cast<startProxy>(pmsg->msg_)),
+                                rcvBuff + 4,
+                                h->len - 4);
             break;
         }
         //---------------------------------------------------------------------------------------------
@@ -88,6 +94,12 @@ namespace _msg_
             break;
         case  msgType::ReqProxy :
             json::to_json(ss, *(std::static_pointer_cast<reqProxy>(pmsg->msg_)));
+            break;
+        case  msgType::RegProxy :
+            json::to_json(ss, *(std::static_pointer_cast<regProxy>(pmsg->msg_)));
+            break;
+        case  msgType::StartProxy :
+            json::to_json(ss, *(std::static_pointer_cast<startProxy>(pmsg->msg_)));
             break;
         case msgType::Ping :
         case msgType::Pong :
