@@ -44,8 +44,18 @@ std::task<> controlProxyListener(std::shared_ptr<Socket> listener)
             }
         case msgType::RegProxy :
             {
-                std::cout <<"收到RegProxy.."<<std::static_pointer_cast<regProxy>(msg.msg_)->controlId<< std::endl;
-
+                std::cout <<"收到RegProxy..."<< std::endl;
+                std::shared_ptr<Proxy> proxy(new Proxy);
+                proxy->socketUp = socket;
+                for(auto c:controlRegistry)
+                {
+                    if(c->id == std::static_pointer_cast<regProxy>(msg.msg_)->controlId)
+                    {
+                        proxy->control = c;
+                        break;
+                    }
+                }
+                proxy->control->proxy_bak.push_back(proxy);
                 break;
             }
         default:
