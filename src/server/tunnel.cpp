@@ -40,7 +40,7 @@ std::task<> Tunnel::tunnelListener()
         proxy->socketDown = socket;
         proxy->forward(proxy->socketDown, proxy->socketUp).resume();
         proxy->forward(proxy->socketUp, proxy->socketDown).resume();
-        proxys.push_back(proxy);
+        // proxys.push_back(proxy);
         }
     }
 }

@@ -5,6 +5,7 @@
 #include "../conf/conf.h"
 #include "../frame/time.h"
 #include "tunnelClient.h"
+#include "proxyClient.h"
 
 class ClientModel;
 class Tunnel;
