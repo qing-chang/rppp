@@ -12,19 +12,6 @@
 class ClientModel;
 class Proxy;
 
-// class Proxy
-// {
-// public:
-//     std::shared_ptr<Socket> socketDown;
-//     std::shared_ptr<Socket> socketUp;
-//     ClientModel *clientModel;
-//     std::shared_ptr<Tunnel> tunnel;
-
-//     Proxy(ClientModel *clientModel):clientModel(clientModel){}
-//     std::task<> NewProxy();
-//     std::task<> forward(std::shared_ptr<Socket> socketIn, std::shared_ptr<Socket> socketOut);
-// };
-
 class Tunnel
 {
 public:

@@ -24,16 +24,3 @@ public:
     std::task<> NewProxy();
     std::task<> forward(std::shared_ptr<Socket> socketIn, std::shared_ptr<Socket> socketOut);
 };
-
-// class Tunnel
-// {
-// public:
-//     int remotePort;
-//     std::string localAddr;
-// 	int localPort;
-//     ClientModel *clientModel;
-//     std::vector<std::shared_ptr<Proxy>> proxys;
-
-//     Tunnel(ClientModel *clientModel):clientModel(clientModel){}
-//     void NewTunnel();
-// };
