@@ -7,13 +7,17 @@ std::task<> Proxy::NewProxy()
 {
     //------------------------------发起到中转服务器的链接----------------------------------------------------
     socketDown = std::shared_ptr<Socket>(new Socket{io_context, 0});
-    int c = co_await socketDown->connect(config.conf->serverAddr, config.conf->serverPort);
-    if(c != 0)
+    while(true)
     {
-        std::cout << "connect fail" << std::endl;
-    }else
-    {
-        std::cout << "connect succeed" << std::endl;
+        int c = co_await socketDown->connect(config.conf->serverAddr, config.conf->serverPort);
+        if(c == 0)
+        {
+            std::cout << "connect succeed" << std::endl;
+            break;
+        }else
+        {
+            std::cout << "connect fail,try again." << std::endl;
+        }
     }
     //------------------------------发送RegProxy----------------------------------------------------
     char sndBuff[SND_BUFF_SIZE];
@@ -46,16 +50,20 @@ std::task<> Proxy::NewProxy()
     }
     //------------------------------发起到内容服务器的链接--------------------------------------------------
     socketUp = std::shared_ptr<Socket>(new Socket{io_context, 0});
-    c = co_await socketUp->connect(tunnel->localAddr, tunnel->localPort);
-    if(c == 0)
+    while(true)
     {
-        std::cout << "connect succeed" << std::endl;
-        //------------------------------中转信息---------------------------------------------------------
-        forward(socketDown, socketUp).resume();
-        forward(socketUp, socketDown).resume();
-    }else
-    {
-        std::cout << "connect fail" << std::endl;
+        c = co_await socketUp->connect(tunnel->localAddr, tunnel->localPort);
+        if(c == 0)
+        {
+            std::cout << "connect succeed" << std::endl;
+            //------------------------------中转信息---------------------------------------------------------
+            forward(socketDown, socketUp).resume();
+            forward(socketUp, socketDown).resume();
+            break;
+        }else
+        {
+            std::cout << "connect fail" << std::endl;
+        }
     }
 }
 
