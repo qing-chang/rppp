@@ -37,5 +37,6 @@ private:
     void unwatchRead(Socket* socket);
     void watchWrite(Socket* socket);
     void unwatchWrite(Socket* socket);
+public:
     void detach(Socket* socket);
 };

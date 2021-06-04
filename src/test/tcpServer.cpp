@@ -1,21 +1,14 @@
 #include "../frame/io_context.h"
 #include "../socket/socket.h"
 #include "../frame/task.h"
-// #include <vector>
-// #include "../conf/conf.h"
-// #include "../channel/channel.h"
-// #include "control.h"
 
-// Channel<int> channel;
-// std::vector<std::shared_ptr<Control>> controlRegistry;
-// Config<confServer> config;
 IOContext io_context;
 
 std::task<> readWrite(std::shared_ptr<Socket> socket)
 {
      char rcvBuff[RCV_BUFF_SIZE];
      ssize_t nbRcved = 0;
-     ssize_t res, nbSended;
+     ssize_t res, nbSended, s;
      while (true)
      {
           res = co_await socket->recv(rcvBuff, RCV_BUFF_SIZE - 1);
@@ -25,13 +18,14 @@ std::task<> readWrite(std::shared_ptr<Socket> socket)
                std::cout <<"收到： "<< rcvBuff <<std::endl;
           }else{
                std::cout<< "对端已关闭连接，关闭本端socket"<< std::endl;
+               io_context.detach(socket.get());
                close(socket->fd);
                co_return;
           }
           nbSended = 0;
           while (nbSended < res)
           {
-               ssize_t s = co_await socket->send(rcvBuff + nbSended, res - nbSended);
+               s = co_await socket->send(rcvBuff + nbSended, res - nbSended);
                if (s <= 0)
                     break;
                nbSended += s;
