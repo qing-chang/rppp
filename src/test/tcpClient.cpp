@@ -3,12 +3,14 @@
 #include "../frame/task.h"
 
 IOContext io_context;
+std::string host;
+int port;
 
 std::task<> readWrite(std::shared_ptr<Socket> socket)
 {
      while(true)
      {
-          int c = co_await socket->connect("127.0.0.1", 8888);
+          int c = co_await socket->connect(host, port);
           if(c == 0)
           {
                std::cout << "connect succeed" << std::endl;
@@ -48,10 +50,19 @@ std::task<> readWrite(std::shared_ptr<Socket> socket)
      }
 }
 
-int main()
+int main(int argc, char * argv[])
 {
+     //解析参数
+     if(argc <=2)
+     {
+          return -1;
+     }
+     host = argv[1];
+     port = std::atoi(argv[2]);
+
      io_context.init();
      std::shared_ptr<Socket> socket(new Socket{io_context, 0});
      readWrite(socket).resume();
      io_context.run();
+     return 0;
 }

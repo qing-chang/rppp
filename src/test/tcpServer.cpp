@@ -35,18 +35,18 @@ std::task<> readWrite(std::shared_ptr<Socket> socket)
 
 std::task<> listen(std::shared_ptr<Socket> listener)
 {
-    while (true)
-    {
-        std::shared_ptr<Socket> socket = co_await listener->accept();
-        std::cout <<"有新用户链入"<< std::endl;
-        readWrite(socket).resume();
-    }
+     while (true)
+     {
+          std::shared_ptr<Socket> socket = co_await listener->accept();
+          std::cout <<"有新用户链入"<< std::endl;
+          readWrite(socket).resume();
+     }
 }
 
 int main()
 {
-    io_context.init();
-    std::shared_ptr<Socket> listener(new Socket{io_context, 8888});
-    listen(listener).resume();
-    io_context.run();
+     io_context.init();
+     std::shared_ptr<Socket> listener(new Socket{io_context, 8888});
+     listen(listener).resume();
+     io_context.run();
 }
