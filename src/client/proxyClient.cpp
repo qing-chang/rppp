@@ -52,7 +52,7 @@ std::task<> Proxy::NewProxy()
     socketUp = std::shared_ptr<Socket>(new Socket{io_context, 0});
     while(true)
     {
-        c = co_await socketUp->connect(tunnel->localAddr, tunnel->localPort);
+        int c = co_await socketUp->connect(tunnel->localAddr, tunnel->localPort);
         if(c == 0)
         {
             std::cout << "connect succeed" << std::endl;

@@ -3,6 +3,8 @@
 #include <cstring>
 #include <memory>
 #include <optional>
+#include <arpa/inet.h>
+#include <unistd.h>
 
 #include "../frame/io_context.h"
 #include "socket_accept_operation.h"
@@ -10,6 +12,9 @@
 #include "socket_recv_operation.h"
 #include "socket_send_operation.h"
 #include "../frame/task.h"
+
+#define SND_BUFF_SIZE 1024
+#define RCV_BUFF_SIZE 1024
 
 class Socket
 {
@@ -42,13 +47,13 @@ public:
         return true;
     }
 
+    int fd = -1;
 private:
     friend SocketAcceptOperation;
     friend SocketConnectOperation;
     friend SocketRecvOperation;
     friend SocketSendOperation;
     IOContext& io_context_;
-    int fd = -1;
     friend IOContext;
     uint32_t io_state_ = 0;
     uint32_t io_new_state_ = 0;

@@ -2,9 +2,6 @@
 #include "../socket/socket.h"
 #include "../json/json.hpp"
 
-#define SND_BUFF_SIZE 1024
-#define RCV_BUFF_SIZE 1024
-
 struct msgHdr
 {
     uint16_t type;

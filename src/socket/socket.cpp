@@ -1,11 +1,9 @@
 #include "socket.h"
 
-#include <arpa/inet.h>
 #include <fcntl.h>
 #include <netdb.h>
 #include <sys/socket.h>
 #include <sys/types.h>
-#include <unistd.h>
 #include <iostream>
 
 Socket::Socket(IOContext& io_context, int port)
