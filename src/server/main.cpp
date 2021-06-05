@@ -47,13 +47,23 @@ std::task<> controlProxyListener(std::shared_ptr<Socket> listener)
                 std::cout <<"收到RegProxy..."<< std::endl;
                 std::shared_ptr<Proxy> proxy(new Proxy);
                 proxy->socketUp = socket;
-                for(auto c:controlRegistry)
+                // for(auto c:controlRegistry)
+                // {
+                //     if(c->id == std::static_pointer_cast<regProxy>(msg.msg_)->controlId)
+                //     {
+                //         proxy->control = c;
+                //         break;
+                //     }
+                // }
+                std::string id{std::static_pointer_cast<regProxy>(msg.msg_)->controlId};
+                auto controlIter = find_if(controlRegistry.begin(), controlRegistry.end(),
+                    [&](auto c) {//std::shared_ptr<Control>
+                        return (c->id == id);
+                    });
+                if(controlIter != controlRegistry.end())
                 {
-                    if(c->id == std::static_pointer_cast<regProxy>(msg.msg_)->controlId)
-                    {
-                        proxy->control = c;
-                        break;
-                    }
+                    std::cout <<"查找到匹配的control..."<< std::endl;
+                    proxy->control = *controlIter;
                 }
                 proxy->control->proxy_bak.push_back(proxy);
                 break;
