@@ -46,7 +46,7 @@ std::task<> Proxy::NewProxy()
             //     }
             // }
             auto tunnelIter = find_if(clientModel->tunnels.begin(), clientModel->tunnels.end(),
-                [remotePort](auto t) {   //std::shared_ptr<Tunnel>
+                [&](auto t) {   //std::shared_ptr<Tunnel>
                     return (t->remotePort == remotePort);
                 });
             if(tunnelIter !=  clientModel->tunnels.end())
