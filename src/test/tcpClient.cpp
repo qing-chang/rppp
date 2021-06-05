@@ -13,11 +13,11 @@ std::task<> readWrite(std::shared_ptr<Socket> socket)
           int c = co_await socket->connect(host, port);
           if(c == 0)
           {
-               std::cout << "connect succeed" << std::endl;
+               std::cout << "连接成功" << std::endl;
                break;
           }else
           {
-               std::cout << "connect fail,try again." << std::endl;
+               std::cout << "连接失败，再次尝试。" << std::endl;
           }
      }
      char rcvBuff[RCV_BUFF_SIZE];
@@ -49,7 +49,11 @@ std::task<> readWrite(std::shared_ptr<Socket> socket)
           }
      }
 }
-
+/*********************************************************************************************
+ * 参数：第1个参数为服务器IP地址，
+ *       第2个参数为服务器端口号。
+ * 例如：./tcpClient 192.168.1.50 8888
+*********************************************************************************************/
 int main(int argc, char * argv[])
 {
      //解析参数
