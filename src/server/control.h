@@ -20,7 +20,7 @@ public:
     Channel<Msg> in, out;
     auth auth_;
     std::vector<std::shared_ptr<Tunnel>> tunnels;
-    std::vector<std::shared_ptr<Proxy>> proxy_bak;
+    Channel<std::shared_ptr<Proxy>> proxy_bak;
     timerNode *tn;
     clock_t lastPing;
 

@@ -57,7 +57,7 @@ std::task<> controlProxyListener(std::shared_ptr<Socket> listener)
                 // }
                 std::string id{std::static_pointer_cast<regProxy>(msg.msg_)->controlId};
                 auto controlIter = find_if(controlRegistry.begin(), controlRegistry.end(),
-                    [&](auto c) {   //std::shared_ptr<Control>
+                    [&id](auto c) {   //std::shared_ptr<Control>
                         return (c->id == id);
                     });
                 if(controlIter != controlRegistry.end())
@@ -65,7 +65,7 @@ std::task<> controlProxyListener(std::shared_ptr<Socket> listener)
                     // std::cout <<"查找到匹配的control..."<< std::endl;
                     proxy->control = *controlIter;
                 }
-                proxy->control->proxy_bak.push_back(proxy);
+                co_await proxy->control->proxy_bak.write(proxy);
                 break;
             }
         default:
