@@ -1,7 +1,7 @@
 #pragma once
 
 #include <coroutine>
-#include <list>
+#include <queue>
 // #include <thread>
 
 template<typename Type>
@@ -35,16 +35,16 @@ public:
 		{
 			if (!ch.receiver)
 				ch.receiver = h;
-			if (!ch._list.empty())
+			if (!ch._queue.empty())
 				h.resume();
 			if (ch.sender && ch.sender != h)
 				ch.sender.resume();
 		}
 		Type await_resume() noexcept(false)
 		{
-			Type obj = std::move(ch._list.front());
-			ch._list.pop_front();
-			return std::move(obj);
+			const Type& obj = std::move(ch._queue.front());
+			ch._queue.pop();
+			return obj;
 		}
 		Channel &ch;
 	};
@@ -59,7 +59,7 @@ public:
 		}
 		void await_suspend(std::coroutine_handle<> h) noexcept(false)
 		{
-			ch._list.push_back(obj_);
+			ch._queue.push(obj_);
 			if (!ch.sender)
 				ch.sender = h;
 			if (ch.receiver && ch.receiver != h)
@@ -84,33 +84,33 @@ public:
 
 	// inline bool write(Type &&obj)
     // {
-        // _list.push_back(std::move(obj));
+        // _queue.push_back(std::move(obj));
     //     if (receiver && receiver != current())
 	// 		resume(receiver);
     // }
 
     inline void clear()
     {
-    	_list.clear();
+    	_queue.clear();
     }
 
 	inline void touch()
     {
     //     if (receiver && receiver != current())
-	// 		resume(receiver);_list
+	// 		resume(receiver);_queue
     }
 	
 	inline size_t size()
 	{
-		return _list.size();
+		return _queue.size();
 	}
 
 	inline bool empty()
 	{
-		return _list.empty();
+		return _queue.empty();
 	}
 
 public:
-	std::list<Type> _list;
+	std::queue<Type> _queue;
 	std::coroutine_handle<> sender, receiver;
 };
