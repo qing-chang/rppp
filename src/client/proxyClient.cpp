@@ -36,17 +36,8 @@ std::task<> Proxy::NewProxy()
         {
             std::cout << "startProxy........." << std::endl;
             int remotePort = std::static_pointer_cast<startProxy>(msg.msg_)->remotePort;
-            // for(auto t:clientModel->tunnels)
-            // {
-            //     if(t->remotePort == remotePort)
-            //     {
-            //         tunnel = t;
-            //         t->proxys.push_back(std::shared_ptr<Proxy>(this));
-            //         break;
-            //     }
-            // }
             auto tunnelIter = find_if(clientModel->tunnels.begin(), clientModel->tunnels.end(),
-                [&remotePort](auto t) {   //std::shared_ptr<Tunnel>
+                [&remotePort](auto t) {
                     return (t->remotePort == remotePort);
                 });
             if(tunnelIter !=  clientModel->tunnels.end())

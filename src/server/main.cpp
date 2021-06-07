@@ -1,4 +1,3 @@
-// #include <vector>
 #include "../conf/conf.h"
 #include "../frame/io_context.h"
 #include "../socket/socket.h"
@@ -47,17 +46,9 @@ std::task<> controlProxyListener(std::shared_ptr<Socket> listener)
                 std::cout <<"收到RegProxy..."<< std::endl;
                 std::shared_ptr<Proxy> proxy(new Proxy);
                 proxy->socketUp = socket;
-                // for(auto c:controlRegistry)
-                // {
-                //     if(c->id == std::static_pointer_cast<regProxy>(msg.msg_)->controlId)
-                //     {
-                //         proxy->control = c;
-                //         break;
-                //     }
-                // }
                 std::string id{std::static_pointer_cast<regProxy>(msg.msg_)->controlId};
                 auto controlIter = find_if(controlRegistry.begin(), controlRegistry.end(),
-                    [&id](auto c) {   //std::shared_ptr<Control>
+                    [&id](auto c) {
                         return (c->id == id);
                     });
                 if(controlIter != controlRegistry.end())

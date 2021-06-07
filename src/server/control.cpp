@@ -31,11 +31,6 @@ std::task<> Control::initControl()
     // stopper().resume();
 }
 
-// void Control::registerTunnel()
-// {
-    
-// }
-
 std::task<> Control::writer()
 {
     std::cout <<"启动writer"<< std::endl;

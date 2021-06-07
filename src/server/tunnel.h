@@ -23,4 +23,5 @@ public:
     Tunnel(Control *control):control(control){}
     std::task<> NewTunnel();
     std::task<> tunnelListener();
+    std::task<> tunnelManager(std::shared_ptr<Socket> socket);
 };
