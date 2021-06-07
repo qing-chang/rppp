@@ -2,7 +2,6 @@
 
 #include <coroutine>
 #include <queue>
-// #include <thread>
 
 template<typename Type>
 class Channel
@@ -14,11 +13,6 @@ public:
 	}
 
 	Channel(std::coroutine_handle<> h)
-	{
-		receiver = h;
-	}
-
-	void consumer(std::coroutine_handle<> h)
 	{
 		receiver = h;
 	}
@@ -42,6 +36,7 @@ public:
 		}
 		Type await_resume() noexcept(false)
 		{
+			ch.receiver = nullptr;
 			const Type& obj = std::move(ch._queue.front());
 			ch._queue.pop();
 			return obj;
@@ -88,6 +83,11 @@ public:
     //     if (receiver && receiver != current())
 	// 		resume(receiver);
     // }
+
+	void consumer(std::coroutine_handle<> h)
+	{
+		receiver = h;
+	}
 
     inline void clear()
     {
