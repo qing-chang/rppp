@@ -32,5 +32,3 @@ void SocketSendOperation::suspend()
 {
     socket->coroSend_ = awaitingCoroutine_;
 }
-
-

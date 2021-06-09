@@ -115,7 +115,7 @@ namespace _msg_
         while (nbSended < len)
         {
             ssize_t res = co_await socket->send(sndBuff + nbSended, len - nbSended);
-            if (res <= 0)
+            if (res <= 0)std::cout << "1--------------------"<<res << std::endl;
                 break;
             nbSended += res;
         }

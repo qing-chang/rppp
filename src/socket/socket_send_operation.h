@@ -20,4 +20,3 @@ private:
     void* buffer_;
     std::size_t len_;
 };
-
