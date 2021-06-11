@@ -16,16 +16,16 @@ namespace std
             task<T> get_return_object();
             suspend_always initial_suspend() { return {}; }
             struct final_awaiter {
-                bool await_ready() { return false; }
-                void await_resume() {}
+                bool await_ready() noexcept(true){ return false; }
+                void await_resume() noexcept(true){}
 
                 template <typename promise_type>
-                    void await_suspend(coroutine_handle<promise_type> me) {
+                    void await_suspend(coroutine_handle<promise_type> me) noexcept(true){
                         if (me.promise().waiter)
                             me.promise().waiter.resume();
                     }
             };
-            auto final_suspend() {
+            auto final_suspend() noexcept(true){
                 return final_awaiter{};
             }
             void unhandled_exception() {}
