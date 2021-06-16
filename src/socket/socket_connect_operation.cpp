@@ -7,10 +7,11 @@
 SocketConnectOperation::SocketConnectOperation(Socket* socket,
         void* buffer,
         std::size_t len)
-    : BlockSyscall2{}
-    , socket{socket}
+    // : BlockSyscall2{}
+    : socket{socket}
     , buffer_{buffer}
     , len_{len}
+    , haveSuspend_{false}
 {
     socket->io_context_.watchRead(socket);
     std::cout << "socket_connect_operation\n";
