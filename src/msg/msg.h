@@ -2,11 +2,15 @@
 #include "../socket/socket.h"
 #include "../json/json.hpp"
 
+#pragma pack(1)
+
 struct msgHdr
 {
     uint16_t type;
     uint16_t len;
 };
+
+#pragma pack()
 
 enum msgType
 {
