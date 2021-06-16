@@ -1,14 +1,12 @@
-#include "socket_connect_operation.h"
-
 #include <iostream>
-
+#include "socket_connect_operation.h"
 #include "socket.h"
 
 SocketConnectOperation::SocketConnectOperation(Socket* socket,
-        void* buffer,
+        void* addr,
         std::size_t len)
     : socket{socket}
-    , buffer_{buffer}
+    , addr_{addr}
     , len_{len}
     , haveSuspend_{false}
 {
@@ -25,7 +23,7 @@ SocketConnectOperation::~SocketConnectOperation()
 int SocketConnectOperation::connect_()
 {
     std::cout << "connect(" << socket->fd << ", ...)\n";
-    return connect(socket->fd, (struct sockaddr *)buffer_, len_);
+    return connect(socket->fd, (struct sockaddr *)addr_, len_);
 }
 
 void SocketConnectOperation::suspend()
