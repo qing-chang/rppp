@@ -2,9 +2,7 @@
 #include "socket_connect_operation.h"
 #include "socket.h"
 
-SocketConnectOperation::SocketConnectOperation(Socket* socket,
-        void* addr,
-        std::size_t len)
+SocketConnectOperation::SocketConnectOperation(Socket* socket, void* addr, std::size_t len)
     : socket{socket}
     , addr_{addr}
     , len_{len}
@@ -28,5 +26,5 @@ int SocketConnectOperation::connect_()
 
 void SocketConnectOperation::suspend()
 {
-    socket->coroRecv_ = awaitingCoroutine_;
+    socket->coroRecv_ = awaitingCoroutine;
 }

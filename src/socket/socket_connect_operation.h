@@ -22,7 +22,7 @@ public:
 
     bool await_suspend(std::coroutine_handle<> h)
     {
-        awaitingCoroutine_ = h;
+        awaitingCoroutine = h;
         returnValue_ = connect_();
         haveSuspend_ =
             returnValue_ == -1 && (errno == EAGAIN || errno == EWOULDBLOCK);
@@ -44,11 +44,10 @@ public:
         return returnValue_;
     }
 
-protected:
-    bool haveSuspend_;
-    std::coroutine_handle<> awaitingCoroutine_;
-    int returnValue_;
 private:
+    bool haveSuspend_;
+    std::coroutine_handle<> awaitingCoroutine;
+    int returnValue_;
     Socket* socket;
     void* addr_;
     std::size_t len_;
