@@ -43,8 +43,7 @@ public:
 
     int await_resume()
     {
-        // if (haveSuspend)
-        //     returnValue = connect_();
+        std::cout << "连接await_resume\n"<<returnValue<<"\n";
         return returnValue;
     }
 
