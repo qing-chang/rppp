@@ -23,31 +23,35 @@ public:
     bool await_suspend(std::coroutine_handle<> h)
     {
         awaitingCoroutine = h;
-        returnValue_ = connect_();
-        haveSuspend_ =
-            returnValue_ == -1 && (errno == EAGAIN || errno == EWOULDBLOCK);
-        if (haveSuspend_)
+        returnValue = connect_();
+        if (returnValue != -1)
         {
-            std::cout << "未直接连上，等待\n";
-            suspend();
-        }
-        else{
             std::cout << "直接连接成功\n";
         }
-        return haveSuspend_;
+        else if(errno == EINPROGRESS)
+        {
+            std::cout << "正在连接中\n";
+            haveSuspend = true;
+            suspend();
+        }
+        else
+        {
+            std::cout << "连接失败\n";
+        }
+        return false;//haveSuspend;
     }
 
     int await_resume()
     {
-        if (haveSuspend_)
-            returnValue_ = connect_();
-        return returnValue_;
+        // if (haveSuspend)
+        //     returnValue = connect_();
+        return returnValue;
     }
 
 private:
-    bool haveSuspend_;
+    bool haveSuspend;
     std::coroutine_handle<> awaitingCoroutine;
-    int returnValue_;
+    int returnValue;
     Socket* socket;
     void* addr_;
     std::size_t len_;

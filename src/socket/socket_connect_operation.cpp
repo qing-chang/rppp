@@ -6,15 +6,15 @@ SocketConnectOperation::SocketConnectOperation(Socket* socket, void* addr, std::
     : socket{socket}
     , addr_{addr}
     , len_{len}
-    , haveSuspend_{false}
+    , haveSuspend{false}
 {
-    socket->io_context_.watchRead(socket);
+    socket->io_context_.watchWrite(socket);
     std::cout << "socket_connect_operation\n";
 }
 
 SocketConnectOperation::~SocketConnectOperation()
 {
-    socket->io_context_.unwatchRead(socket);
+    socket->io_context_.unwatchWrite(socket);
     std::cout << "~socket_connect_operation\n";
 }
 
@@ -26,5 +26,5 @@ int SocketConnectOperation::connect_()
 
 void SocketConnectOperation::suspend()
 {
-    socket->coroRecv_ = awaitingCoroutine;
+    socket->coroSend_ = awaitingCoroutine;
 }
