@@ -8,7 +8,6 @@ namespace std
     template <typename T> struct task;
     namespace detail
     {
-
         template <typename T>
         struct promise_type_base
         {
@@ -54,43 +53,44 @@ namespace std
 
     }
 
-template <typename T = void>
-struct task
-{
-    using promise_type = detail::promise_type<T>;
-    task()
-      : handle_{nullptr}
-    {}
-    task(coroutine_handle<promise_type> handle)
-      : handle_{handle}
-    {}
-    /*
-    ~task()
+    template <typename T = void>
+    struct task
     {
-        if (handle_)
-            handle_.destroy();
-    }
-    */
+        using promise_type = detail::promise_type<T>;
+        task()
+        : handle_{nullptr}
+        {}
+        task(coroutine_handle<promise_type> handle)
+        : handle_{handle}
+        {}
+        /*
+        ~task()
+        {
+            if (handle_)
+                handle_.destroy();
+        }
+        */
 
-    bool await_ready() { return false; }
-    T await_resume();
-    void await_suspend(coroutine_handle<> waiter) {
-        handle_.promise().waiter = waiter;
-        handle_.resume();
-    }
+        bool await_ready() { return false; }
+        T await_resume();
+        void await_suspend(coroutine_handle<> waiter) {
+            handle_.promise().waiter = waiter;
+            handle_.resume();
+        }
 
-    void resume() {
-        handle_.resume();
-    }
-    coroutine_handle<promise_type> handle_;
-};
+        void resume() {
+            handle_.resume();
+        }
+        coroutine_handle<promise_type> handle_;
+    };
 
-template <typename T>
-T task<T>::await_resume() {
-    return handle_.promise().result;
-}
-template <>
-inline void task<void>::await_resume() {}
+    template <typename T>
+    T task<T>::await_resume() {
+        return handle_.promise().result;
+    }
+    template <>
+    inline void task<void>::await_resume() {}
+
     namespace detail
     {
         template <typename T>
