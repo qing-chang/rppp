@@ -24,15 +24,13 @@ private:
     constexpr static std::size_t max_events = 10;
     int efd;
 
-    // Fill it by watchRead / watchWrite
-    std::set<Socket*> processedSockets;
-
     friend Socket;
     friend SocketAcceptOperation;
     friend SocketConnectOperation;
     friend SocketRecvOperation;
     friend SocketSendOperation;
     void attach(Socket* socket);
+    void mod(Socket* socket);
     void watchConnect(Socket* socket);
     void watchRead(Socket* socket);
     void unwatchRead(Socket* socket);

@@ -62,18 +62,14 @@ std::task<std::shared_ptr<Socket>> Socket::accept()
     co_return std::shared_ptr<Socket>(new Socket{fd, io_context_});
 }
 
-std::task<int> Socket::connect(std::string addr, std::size_t port)
+SocketConnectOperation Socket::connect(std::string addr, std::size_t port)
 {
     struct sockaddr_in remote_addr;
     memset(&remote_addr,0,sizeof(remote_addr));
     remote_addr.sin_family = AF_INET;
     remote_addr.sin_port = htons(port);
     remote_addr.sin_addr.s_addr = inet_addr(addr.c_str());
-    int c = co_await SocketConnectOperation{this,(void *)(&remote_addr),sizeof(remote_addr)};
-    std::cout << "连接。。。。。"<<c<<"\n";
-    // if (c == -1)
-    //     throw std::runtime_error{"connect"};
-    co_return c;
+    return SocketConnectOperation{this,(void *)(&remote_addr),sizeof(remote_addr)};
 }
 
 SocketRecvOperation Socket::recv(void* buffer, std::size_t len)

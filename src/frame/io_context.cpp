@@ -23,7 +23,7 @@ void IOContext::expireTimer()
 
 void IOContext::run()
 {
-    struct epoll_event ev, events[max_events];
+    struct epoll_event events[max_events];
     for (;;)
     {
         expireTimer();
@@ -42,17 +42,6 @@ void IOContext::run()
             if (events[n].events & EPOLLOUT)
                 socket->resumeSend();
         }
-        for (auto* socket : processedSockets)
-        {
-            auto io_state = socket->io_new_state_;
-            if (socket->io_state_ == io_state)
-                continue;
-            ev.events = io_state;
-            ev.data.ptr = socket;
-            if (epoll_ctl(efd, EPOLL_CTL_MOD, socket->fd, &ev) == -1)
-                throw std::runtime_error{"epoll_ctl: mod"};
-            socket->io_state_ = io_state;
-        }
     }
 }
 
@@ -67,34 +56,47 @@ void IOContext::attach(Socket* socket)
     socket->io_state_ = io_state;
 }
 
+void IOContext::mod(Socket* socket)
+{
+    struct epoll_event ev;
+    auto io_state = socket->io_new_state_;
+    if (socket->io_state_ == io_state)
+        return;
+    ev.events = io_state;
+    ev.data.ptr = socket;
+    if (epoll_ctl(efd, EPOLL_CTL_MOD, socket->fd, &ev) == -1)
+        throw std::runtime_error{"epoll_ctl: mod"};
+    socket->io_state_ = io_state;
+}
+
 void IOContext::watchConnect(Socket* socket)
 {
     socket->io_new_state_ = socket->io_state_ | EPOLLIN|EPOLLOUT|EPOLLERR|EPOLLHUP | EPOLLET;
-    processedSockets.insert(socket);
+    mod(socket);
 }
 
 void IOContext::watchRead(Socket* socket)
 {
     socket->io_new_state_ = socket->io_state_ | EPOLLIN;
-    processedSockets.insert(socket);
+    mod(socket);
 }
 
 void IOContext::unwatchRead(Socket* socket)
 {
     socket->io_new_state_ = socket->io_state_ & ~EPOLLIN;
-    processedSockets.insert(socket);
+    mod(socket);
 }
 
 void IOContext::watchWrite(Socket* socket)
 {
     socket->io_new_state_ = socket->io_state_ | EPOLLOUT;
-    processedSockets.insert(socket);
+    mod(socket);
 }
 
 void IOContext::unwatchWrite(Socket* socket)
 {
     socket->io_new_state_ = socket->io_state_ & ~EPOLLOUT;
-    processedSockets.insert(socket);
+    mod(socket);
 }
 
 void IOContext::detach(Socket* socket)
@@ -103,5 +105,4 @@ void IOContext::detach(Socket* socket)
         perror("epoll_ctl: detach");
         exit(EXIT_FAILURE);
     }
-    processedSockets.erase(socket);
 }
