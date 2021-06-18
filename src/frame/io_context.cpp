@@ -36,7 +36,7 @@ void IOContext::run()
         for (int n = 0; n < nfds; ++n)
         {
             auto socket = static_cast<Socket*>(events[n].data.ptr);
-
+            std::cout << "epoll(" << socket->fd << ")\n";
             if (events[n].events & EPOLLIN)
                 socket->resumeRecv();
             if (events[n].events & EPOLLOUT)
@@ -65,6 +65,12 @@ void IOContext::attach(Socket* socket)
     if (epoll_ctl(efd, EPOLL_CTL_ADD, socket->fd, &ev) == -1)
         throw std::runtime_error{"epoll_ctl: attach"};
     socket->io_state_ = io_state;
+}
+
+void IOContext::watchConnect(Socket* socket)
+{
+    socket->io_new_state_ = socket->io_state_ | EPOLLIN|EPOLLOUT|EPOLLERR|EPOLLHUP | EPOLLET;
+    processedSockets.insert(socket);
 }
 
 void IOContext::watchRead(Socket* socket)

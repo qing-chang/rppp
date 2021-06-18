@@ -70,8 +70,9 @@ std::task<int> Socket::connect(std::string addr, std::size_t port)
     remote_addr.sin_port = htons(port);
     remote_addr.sin_addr.s_addr = inet_addr(addr.c_str());
     int c = co_await SocketConnectOperation{this,(void *)(&remote_addr),sizeof(remote_addr)};
-    if (c == -1)
-        throw std::runtime_error{"connect"};
+    std::cout << "连接。。。。。"<<c<<"\n";
+    // if (c == -1)
+    //     throw std::runtime_error{"connect"};
     co_return c;
 }
 

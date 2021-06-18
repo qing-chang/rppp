@@ -23,10 +23,11 @@ public:
     bool await_suspend(std::coroutine_handle<> h)
     {
         awaitingCoroutine = h;
-        returnValue = connect_();
-        if (returnValue != -1)
+        int res = connect_();
+        if (res != -1)
         {
             std::cout << "直接连接成功\n";
+            returnValue = 0;
         }
         else if(errno == EINPROGRESS)
         {
@@ -37,13 +38,18 @@ public:
         else
         {
             std::cout << "连接失败\n";
+            returnValue = -1;
         }
-        return false;//haveSuspend;
+        return haveSuspend;//false;
     }
 
     int await_resume()
     {
         std::cout << "连接await_resume\n"<<returnValue<<"\n";
+        if(haveSuspend)
+        {
+            returnValue = 0;
+        }
         return returnValue;
     }
 

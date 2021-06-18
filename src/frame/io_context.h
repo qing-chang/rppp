@@ -33,6 +33,7 @@ private:
     friend SocketRecvOperation;
     friend SocketSendOperation;
     void attach(Socket* socket);
+    void watchConnect(Socket* socket);
     void watchRead(Socket* socket);
     void unwatchRead(Socket* socket);
     void watchWrite(Socket* socket);

@@ -8,7 +8,7 @@ SocketConnectOperation::SocketConnectOperation(Socket* socket, void* addr, std::
     , len_{len}
     , haveSuspend{false}
 {
-    socket->io_context_.watchWrite(socket);
+    socket->io_context_.watchConnect(socket);
     std::cout << "socket_connect_operation\n";
 }
 
