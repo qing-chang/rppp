@@ -1,12 +1,10 @@
 #include "socket_accept_operation.h"
-
 #include <iostream>
-
 #include "socket.h"
 
 SocketAcceptOperation::SocketAcceptOperation(Socket* socket)
-    : BlockSyscall{}
-    , socket{socket}
+    : socket{socket}
+    , haveSuspend{false}
 {
     socket->io_context_.watchRead(socket);
     std::cout << "socket_accept_operation\n";
@@ -18,7 +16,7 @@ SocketAcceptOperation::~SocketAcceptOperation()
     std::cout << "~socket_accept_operation\n";
 }
 
-int SocketAcceptOperation::syscall()
+int SocketAcceptOperation::accept_()
 {
     struct sockaddr_storage their_addr;
     socklen_t addr_size = sizeof their_addr;

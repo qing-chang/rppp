@@ -2,33 +2,31 @@
 
 #include <sys/socket.h>
 #include <sys/types.h>
-
-// #include "block_syscall.h"
 #include <cerrno>
 #include <coroutine>
 #include <type_traits>
 #include <iostream>
 
-template<typename SyscallOpt>
-class BlockSyscall
+class Socket;
+
+class SocketAcceptOperation
 {
 public:
-    BlockSyscall()
-        : haveSuspend{false}
-    {}
+    SocketAcceptOperation(Socket* socket);
+    ~SocketAcceptOperation();
 
+    int accept_();
+    void suspend();
     bool await_ready() const noexcept { return false; }
 
     bool await_suspend(std::coroutine_handle<> h)
     {
-        static_assert(std::is_base_of_v<BlockSyscall, SyscallOpt>);
         awaitingCoroutine = h;
-        returnValue = static_cast<SyscallOpt*>(this)->syscall();
+        returnValue = accept_();
         haveSuspend =
             returnValue == -1 && (errno == EAGAIN || errno == EWOULDBLOCK);
         if (haveSuspend)
-            static_cast<SyscallOpt*>(this)->suspend();
-
+            suspend();
         return haveSuspend;
     }
 
@@ -36,26 +34,14 @@ public:
     {
         std::cout << "await_resume\n";
         if (haveSuspend)
-            returnValue = static_cast<SyscallOpt*>(this)->syscall();
+            returnValue = accept_();
         return returnValue;
     }
 
-protected:
+private:
     bool haveSuspend;
     std::coroutine_handle<> awaitingCoroutine;
     int returnValue;
-};
-class Socket;
-
-class SocketAcceptOperation : public BlockSyscall<SocketAcceptOperation>
-{
-public:
-    SocketAcceptOperation(Socket* socket);
-    ~SocketAcceptOperation();
-
-    int syscall();
-    void suspend();
-private:
     Socket* socket;
     void* buffer_;
     std::size_t len_;

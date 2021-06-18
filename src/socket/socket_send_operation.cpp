@@ -1,16 +1,12 @@
 #include "socket_send_operation.h"
-
 #include <iostream>
-
 #include "socket.h"
 
-SocketSendOperation::SocketSendOperation(Socket* socket,
-        void* buffer,
-        std::size_t len)
-    : BlockSyscall2{}
-    , socket{socket}
+SocketSendOperation::SocketSendOperation(Socket* socket, void* buffer, std::size_t len)
+    : socket{socket}
     , buffer_{buffer}
     , len_{len}
+    , haveSuspend{false}
 {
     socket->io_context_.watchWrite(socket);
     std::cout << "socket_send_operation\n";
@@ -22,7 +18,7 @@ SocketSendOperation::~SocketSendOperation()
     std::cout << "~socket_send_operation\n";
 }
 
-ssize_t SocketSendOperation::syscall()
+ssize_t SocketSendOperation::send_()
 {
     std::cout << "send(" << socket->fd << ", buffer_, len_, 0)\n";
     return send(socket->fd, buffer_, len_, 0);
@@ -30,5 +26,5 @@ ssize_t SocketSendOperation::syscall()
 
 void SocketSendOperation::suspend()
 {
-    socket->coroSend_ = awaitingCoroutine_;
+    socket->coroSend_ = awaitingCoroutine;
 }

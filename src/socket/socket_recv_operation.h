@@ -15,7 +15,7 @@ public:
     SocketRecvOperation(Socket* socket, void* buffer, std::size_t len);
     ~SocketRecvOperation();
 
-    ssize_t syscall();
+    ssize_t recv_();
     void suspend();
 
     bool await_ready() const noexcept { return false; }
@@ -23,7 +23,7 @@ public:
     bool await_suspend(std::coroutine_handle<> h)
     {
         awaitingCoroutine = h;
-        returnValue = syscall();
+        returnValue = recv_();
         haveSuspend =
             returnValue == -1 && (errno == EAGAIN || errno == EWOULDBLOCK);
         if (haveSuspend)
@@ -35,7 +35,7 @@ public:
     {
         std::cout << "await_resume\n";
         if (haveSuspend)
-            returnValue = syscall();
+            returnValue = recv_();
         return returnValue;
     }
 
