@@ -24,7 +24,7 @@ void IOContext::expireTimer()
 void IOContext::run()
 {
     struct epoll_event events[max_events];
-    for (;;)
+    while(true)
     {
         expireTimer();
         clock_t tv= timers?timers->time - clock():-1;

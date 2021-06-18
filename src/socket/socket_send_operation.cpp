@@ -7,7 +7,7 @@
 SocketSendOperation::SocketSendOperation(Socket* socket,
         void* buffer,
         std::size_t len)
-    : BlockSyscall{}
+    : BlockSyscall2{}
     , socket{socket}
     , buffer_{buffer}
     , len_{len}

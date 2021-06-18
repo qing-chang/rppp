@@ -28,5 +28,5 @@ int SocketAcceptOperation::syscall()
 
 void SocketAcceptOperation::suspend()
 {
-    socket->coroRecv_ = awaitingCoroutine_;
+    socket->coroRecv_ = awaitingCoroutine;
 }
