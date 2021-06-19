@@ -8,17 +8,15 @@ int port;
 
 std::task<> readWrite(std::shared_ptr<Socket> socket)
 {
-     while(true)
+     int c = co_await socket->connect(host, port);
+     if(c == 0)
      {
-          int c = co_await socket->connect(host, port);
-          if(c == 0)
-          {
-               std::cout << "连接成功" << std::endl;
-               break;
-          }else
-          {
-               std::cout << "连接失败，再次尝试。" << std::endl;
-          }
+          std::cout << "连接成功" << std::endl;
+     }
+     else
+     {
+          std::cout << "连接失败。" << c << std::endl;
+          co_return;
      }
      char rcvBuff[RCV_BUFF_SIZE];
      ssize_t nbRcved = 0;

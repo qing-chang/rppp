@@ -17,6 +17,7 @@ public:
 
     int connect_();
     void suspend();
+    int getsockopt_();
 
     bool await_ready() const noexcept { return false; }
 
@@ -40,7 +41,7 @@ public:
             std::cout << "连接失败\n";
             returnValue = -1;
         }
-        return haveSuspend;//false;
+        return haveSuspend;
     }
 
     int await_resume()
@@ -48,7 +49,7 @@ public:
         std::cout << "连接await_resume\n"<<returnValue<<"\n";
         if(haveSuspend)
         {
-            returnValue = 0;
+            returnValue = getsockopt_();
         }
         return returnValue;
     }

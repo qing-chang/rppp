@@ -28,3 +28,14 @@ void SocketConnectOperation::suspend()
 {
     socket->coroSend_ = awaitingCoroutine;
 }
+int SocketConnectOperation::getsockopt_()
+{
+    int err;
+    socklen_t socklen = sizeof(err);
+    if(getsockopt(socket->fd, SOL_SOCKET, SO_ERROR, &err, &socklen) < 0)
+        return -1;
+    else if (err == 0)
+        return 0;
+    else
+        return err;
+}

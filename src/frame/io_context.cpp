@@ -39,7 +39,7 @@ void IOContext::run()
             std::cout << "epoll(" << socket->fd << ")\n";
             if (events[n].events & EPOLLIN)
                 socket->resumeRecv();
-            if (events[n].events & EPOLLOUT)
+            if (events[n].events & (EPOLLOUT|EPOLLERR))
                 socket->resumeSend();
         }
     }
@@ -71,7 +71,7 @@ void IOContext::mod(Socket* socket)
 
 void IOContext::watchConnect(Socket* socket)
 {
-    socket->io_new_state_ = socket->io_state_ | EPOLLIN|EPOLLOUT|EPOLLERR|EPOLLHUP | EPOLLET;
+    socket->io_new_state_ = socket->io_state_ | EPOLLOUT|EPOLLERR|EPOLLHUP | EPOLLET;
     mod(socket);
 }
 
