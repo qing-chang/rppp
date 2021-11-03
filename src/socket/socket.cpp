@@ -64,12 +64,12 @@ std::task<std::shared_ptr<Socket>> Socket::accept()
 
 SocketConnectOperation Socket::connect(std::string addr, std::size_t port)
 {
-    struct sockaddr_in remote_addr;
-    memset(&remote_addr,0,sizeof(remote_addr));
-    remote_addr.sin_family = AF_INET;
-    remote_addr.sin_port = htons(port);
-    remote_addr.sin_addr.s_addr = inet_addr(addr.c_str());
-    return SocketConnectOperation{this,(void *)(&remote_addr),sizeof(remote_addr)};
+    // struct sockaddr_in remote_addr;
+    // memset(&remote_addr,0,sizeof(remote_addr));
+    // remote_addr.sin_family = AF_INET;
+    // remote_addr.sin_port = htons(port);
+    // remote_addr.sin_addr.s_addr = inet_addr(addr.c_str());
+    return SocketConnectOperation{this, addr, port};
 }
 
 SocketRecvOperation Socket::recv(void* buffer, std::size_t len)

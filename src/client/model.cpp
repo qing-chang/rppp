@@ -15,18 +15,18 @@ std::task<> ClientModel::control()
 {
     //--------------------------------------------------------------------------------------------------------
     socket =  std::shared_ptr<Socket>(new Socket{io_context, 0});
-    while(true)
-    {
+    // while(true)
+    // {
         int c = co_await socket->connect(config.conf->serverAddr, config.conf->serverPort);
         if(c == 0)
         {
             std::cout << "connect succeed" << std::endl;
-            break;
+            // break;
         }else
         {
             std::cout << "connect fail,try again." << std::endl;
         }
-    }
+    // }
     //--------------------------------------------------------------------------------------------------------
     char sndBuff[SND_BUFF_SIZE];
     char rcvBuff[RCV_BUFF_SIZE];

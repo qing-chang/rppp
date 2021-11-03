@@ -2,10 +2,10 @@
 #include "socket_connect_operation.h"
 #include "socket.h"
 
-SocketConnectOperation::SocketConnectOperation(Socket* socket, void* addr, std::size_t len)
+SocketConnectOperation::SocketConnectOperation(Socket* socket, std::string addr, std::size_t port)
     : socket{socket}
     , addr_{addr}
-    , len_{len}
+    , port_{port}
     , haveSuspend{false}
 {
     socket->io_context_.watchConnect(socket);
@@ -20,8 +20,13 @@ SocketConnectOperation::~SocketConnectOperation()
 
 int SocketConnectOperation::connect_()
 {
+    struct sockaddr_in remote_addr;
+    memset(&remote_addr,0,sizeof(remote_addr));
+    remote_addr.sin_family = AF_INET;
+    remote_addr.sin_port = htons(port_);
+    remote_addr.sin_addr.s_addr = inet_addr(addr_.c_str());
     std::cout << "connect(" << socket->fd << ", ...)\n";
-    return connect(socket->fd, (struct sockaddr *)addr_, len_);
+    return connect(socket->fd, (struct sockaddr *)&remote_addr, sizeof(remote_addr));
 }
 
 void SocketConnectOperation::suspend()

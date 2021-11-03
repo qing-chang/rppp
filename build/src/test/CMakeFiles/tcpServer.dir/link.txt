@@ -1,0 +1,1 @@
+/usr/bin/c++  -g -std=c++20 -pthread CMakeFiles/tcpServer.dir/tcpServer.cpp.o -o ../../tcpServer  ../frame/libframe.a ../socket/libsocket.a 

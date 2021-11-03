@@ -1,0 +1,2 @@
+/usr/bin/ar qc libframe.a CMakeFiles/frame.dir/io_context.cpp.o CMakeFiles/frame.dir/time.cpp.o
+/usr/bin/ranlib libframe.a

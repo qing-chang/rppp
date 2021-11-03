@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/ippp/ippp/frpcpp/src/channel/channel.cpp
+../frame/task.h
+/home/ippp/ippp/frpcpp/src/frame/task.h
+channel.h
+/home/ippp/ippp/frpcpp/src/channel/channel.h
+
+/home/ippp/ippp/frpcpp/src/channel/channel.h
+coroutine
+-
+queue
+-
+
+/home/ippp/ippp/frpcpp/src/frame/task.h
+coroutine
+-
+iostream
+-
+

@@ -1,0 +1,1 @@
+/usr/bin/c++  -g -std=c++20 -pthread CMakeFiles/channel.dir/channel.cpp.o -o ../../channel 

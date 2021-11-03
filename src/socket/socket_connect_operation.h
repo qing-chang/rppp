@@ -12,7 +12,7 @@ class Socket;
 class SocketConnectOperation
 {
 public:
-    SocketConnectOperation(Socket* socket, void* addr, std::size_t len);
+    SocketConnectOperation(Socket* socket, std::string addr, std::size_t port);
     ~SocketConnectOperation();
 
     int connect_();
@@ -59,6 +59,8 @@ private:
     std::coroutine_handle<> awaitingCoroutine;
     int returnValue;
     Socket* socket;
-    void* addr_;
-    std::size_t len_;
+    std::string addr_;
+    std::size_t port_;
+    // struct sockaddr_in addr_;
+    // std::size_t len_;
 };

@@ -1,0 +1,1 @@
+/usr/bin/c++  -g -std=c++20 -pthread CMakeFiles/server.dir/control.cpp.o CMakeFiles/server.dir/main.cpp.o CMakeFiles/server.dir/proxy.cpp.o CMakeFiles/server.dir/tunnel.cpp.o -o ../../server  ../conf/libconf.a ../frame/libframe.a ../msg/libmsg.a ../socket/libsocket.a 

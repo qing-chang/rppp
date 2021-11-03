@@ -1,0 +1,5 @@
+/home/ippp/ippp/frpcpp/src/test/module/cmaketest/build/CMakeFiles/rebuild_cache.dir
+/home/ippp/ippp/frpcpp/src/test/module/cmaketest/build/CMakeFiles/edit_cache.dir
+/home/ippp/ippp/frpcpp/src/test/module/cmaketest/build/CMakeFiles/prog-modules.dir
+/home/ippp/ippp/frpcpp/src/test/module/cmaketest/build/CMakeFiles/prog.dir
+/home/ippp/ippp/frpcpp/src/test/module/cmaketest/build/CMakeFiles/std_modules.dir
